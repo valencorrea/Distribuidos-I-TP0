@@ -12,7 +12,7 @@ def write_server(file):
     file.write(YAML_TAB + YAML_TAB + "networks:\n")
     file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- testing_net\n")
     file.write(YAML_TAB + YAML_TAB + "volumes:\n")
-    file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- ./server/config.ini:/app/config.ini\n")
+    file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- ./server/config.ini:/config.ini\n")
     file.write("\n")
 
 def write_client(id, file):
@@ -28,7 +28,7 @@ def write_client(id, file):
     file.write(YAML_TAB + YAML_TAB + "depends_on:\n")
     file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- server\n")
     file.write(YAML_TAB + YAML_TAB + "volumes:\n")
-    file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- ./client/config.yaml:/app/config.yaml\n")
+    file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- ./client/config.yaml:/config.yaml\n")
     file.write("\n")
 
 def write_clients(file, clients):
