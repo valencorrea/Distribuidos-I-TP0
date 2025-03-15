@@ -6,10 +6,11 @@ services:
     entrypoint: python3 /main.py
     environment:
       - PYTHONUNBUFFERED=1
+      - LOGGING_LEVEL=DEBUG
     networks:
       - testing_net
     volumes:
-      - ./server/config.ini:/tp0/server/config.ini
+      - ./server/config.ini:/app/config.ini
 
   client1:
     container_name: client1
@@ -17,64 +18,13 @@ services:
     entrypoint: /client
     environment:
       - CLI_ID=1
+      - CLI_LOG_LEVEL=DEBUG
     networks:
       - testing_net
     depends_on:
       - server
     volumes:
-      - ./client/config.yaml:/tp0/client/config.yaml
-
-  client2:
-    container_name: client2
-    image: client:latest
-    entrypoint: /client
-    environment:
-      - CLI_ID=2
-    networks:
-      - testing_net
-    depends_on:
-      - server
-    volumes:
-      - ./client/config.yaml:/tp0/client/config.yaml
-
-  client3:
-    container_name: client3
-    image: client:latest
-    entrypoint: /client
-    environment:
-      - CLI_ID=3
-    networks:
-      - testing_net
-    depends_on:
-      - server
-    volumes:
-      - ./client/config.yaml:/tp0/client/config.yaml
-
-  client4:
-    container_name: client4
-    image: client:latest
-    entrypoint: /client
-    environment:
-      - CLI_ID=4
-    networks:
-      - testing_net
-    depends_on:
-      - server
-    volumes:
-      - ./client/config.yaml:/tp0/client/config.yaml
-
-  client5:
-    container_name: client5
-    image: client:latest
-    entrypoint: /client
-    environment:
-      - CLI_ID=5
-    networks:
-      - testing_net
-    depends_on:
-      - server
-    volumes:
-      - ./client/config.yaml:/tp0/client/config.yaml
+      - ./client/config.yaml:/app/config.yaml
 
 networks:
   testing_net:
