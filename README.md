@@ -26,4 +26,4 @@ En el archivo de Docker Compose de salida se pueden definir volúmenes, variable
 
 #### Solucion
 
-Se plantea el script `generar-compose.sh` que recibe como parámetros el nombre del archivo de salida y la cantidad de clientes deseada. El mismo invoca un generar-compose.py el cual dinamicamente genera un archivo `docker-compose-dev.yaml` con la cantidad de clientes especificada.
+Se plantea el script `generar-compose.sh` que recibe como parámetros el nombre del archivo de salida y la cantidad de clientes deseada. El mismo invoca un `generar-compose.py` el cual dinamicamente genera un archivo `docker-compose-dev.yaml` con la cantidad de clientes especificada.
