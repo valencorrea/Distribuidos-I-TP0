@@ -6,11 +6,10 @@ def write_server(file):
     file.write(YAML_TAB + YAML_TAB + "container_name: server\n")
     file.write(YAML_TAB + YAML_TAB + "image: server:latest\n")
     file.write(YAML_TAB + YAML_TAB + "entrypoint: python3 /main.py\n")
-    file.write(YAML_TAB + YAML_TAB + "environment:\n")
-    file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- PYTHONUNBUFFERED=1\n")
-    file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- LOGGING_LEVEL=DEBUG\n")
     file.write(YAML_TAB + YAML_TAB + "networks:\n")
     file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- testing_net\n")
+    file.write(YAML_TAB + YAML_TAB + "volumes:\n")
+    file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- server/config.ini:tp0/server/config.ini\n")
     file.write("\n")
 
 def write_client(id, file):
