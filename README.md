@@ -16,3 +16,5 @@ El script deberá ubicarse en la raíz del proyecto. Netcat no debe ser instalad
 
 #### Solucion:
 
+Se agrega el target `docker-netcat` al Makefile. Este hace un build de la imagen `netcat:latest` y luego corre un contenedor, el cual se conecta a `testing_net`.
+La imagen se asocia a un Dockerfile que levanta una imagen `alpine`, elegida por su pequeño tamaño. En el archivo bash `validar-echo-server.sh` que se invoca alli se obtienen las variables necesarias para la comunicacion del server desde su archivo de configuracion `config.sh`.
