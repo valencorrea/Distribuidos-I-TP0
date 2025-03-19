@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 # Instalo netcat en nueva imagen
-RUN apk add --no-cache netcat-openbsd
+RUN apk add netcat-openbsd
 
 # Copio en el mismo directorio el archivo
 COPY validar-echo-server.sh /

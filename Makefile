@@ -28,6 +28,7 @@ docker-image:
 
 docker-compose-up: docker-image
 	docker compose -f docker-compose-dev.yaml up -d --build
+	docker run --rm --network testing_net validar-echo-server
 .PHONY: docker-compose-up
 
 docker-compose-down:
@@ -38,7 +39,3 @@ docker-compose-down:
 docker-compose-logs:
 	docker compose -f docker-compose-dev.yaml logs -f
 .PHONY: docker-compose-logs
-
-docker-netcat:
-	docker run --rm validar-echo-server
-.PHONY: docker-netcat
