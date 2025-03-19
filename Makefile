@@ -18,8 +18,7 @@ build: deps
 docker-image:
 	docker build -f ./server/Dockerfile -t "server:latest" .
 	docker build -f ./client/Dockerfile -t "client:latest" .
-	docker build -f ./Dockerfile -t "netcat:latest" .
-	# Execute this command from time to time to clean up intermediate stages generated 
+	# Execute this command from time to time to clean up intermediate stages generated
 	# during client build (your hard drive will like this :) ). Don't left uncommented if you 
 	# want to avoid rebuilding client image every time the docker-compose-up command 
 	# is executed, even when client code has not changed
@@ -28,7 +27,6 @@ docker-image:
 
 docker-compose-up: docker-image
 	docker compose -f docker-compose-dev.yaml up -d --build
-	docker run --rm --network testing_net validar-echo-server
 .PHONY: docker-compose-up
 
 docker-compose-down:
@@ -39,3 +37,8 @@ docker-compose-down:
 docker-compose-logs:
 	docker compose -f docker-compose-dev.yaml logs -f
 .PHONY: docker-compose-logs
+
+docker-netcat:
+	docker build -f ./Dockerfile -t "netcat:latest" .
+	docker run --rm --network testing_net --name netcat-container "netcat:latest"
+.PHONY: docker-netcat
