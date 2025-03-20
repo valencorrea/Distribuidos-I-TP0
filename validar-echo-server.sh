@@ -10,7 +10,7 @@ SERVER_IP=$(awk -F " = " '/SERVER_IP/ {print $2}' ./server/config.ini)
 RESPONSE=$(echo "$MESSAGE" | nc $SERVER_IP $SERVER_PORT)
 
 # Valido resultado
-if [[ "$RESPONSE" == "$MESSAGE" ]]; then
+if [ "$RESPONSE" == "$MESSAGE" ]; then
   echo "action: test_echo_server | result: success"
 else
   echo "action: test_echo_server | result: fail"
