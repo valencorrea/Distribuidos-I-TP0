@@ -1,5 +1,7 @@
 FROM alpine:latest
 
+RUN which bash
+
 # Instalo netcat en nueva imagen
 RUN apk add netcat-openbsd
 
