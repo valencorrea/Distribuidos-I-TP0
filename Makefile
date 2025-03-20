@@ -40,5 +40,5 @@ docker-compose-logs:
 
 docker-netcat:
 	docker build -f ./Dockerfile -t "netcat:latest" .
-	docker run --rm --network tp0_testing_net --name netcat-container "netcat:latest" -w 10
+	docker run --rm --network tp0_testing_net --name netcat-container "netcat:latest"
 .PHONY: docker-netcat
