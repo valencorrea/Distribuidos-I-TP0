@@ -14,4 +14,4 @@ COPY server/config.ini /server/config.ini
 # Doy permisos de ejecucion
 RUN chmod +x validar-echo-server.sh
 
-ENTRYPOINT ["/validar-echo-server.sh"]
+ENTRYPOINT ["/bin/bash", "/validar-echo-server.sh"]
