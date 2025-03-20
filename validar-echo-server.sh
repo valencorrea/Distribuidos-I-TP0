@@ -7,7 +7,7 @@ SERVER_PORT=$(awk -F " = " '/SERVER_PORT/ {print $2}' ./server/config.ini)
 SERVER_IP=$(awk -F " = " '/SERVER_IP/ {print $2}' ./server/config.ini)
 
 # Uso netcat para enviar mensaje al server y guardo respuesta
-RESPONSE=$(echo "$MESSAGE" | nc $SERVER_IP $SERVER_PORT)
+RESPONSE=$(echo "$MESSAGE" | nc -w 2 $SERVER_IP $SERVER_PORT)
 
 # Valido resultado
 if [ "$RESPONSE" == "$MESSAGE" ]; then
