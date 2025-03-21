@@ -15,9 +15,7 @@ if ! docker images | grep -q "$IMAGE_NAME"; then
 fi
 
 # Me conecto a la red testing_net y luego ejecuto en una shell netcat para enviar mensaje al server y guardarme su respuesta
-RESPONSE=$(docker run --rm --network tp0_testing_net --name "$CONTAINER_NAME" "$IMAGE_NAME" sh -c "
-  echo \"$MESSAGE\" | nc -w 2 server $SERVER_PORT
-")
+RESPONSE=$(echo $ECHO_MESSAGE | docker run --rm --network=tp0_testing_net -i subfuzion/netcat -w 2 server $SERVER_PORT)
 
 # Valido resultado
 if [ "$RESPONSE" = "$MESSAGE" ]; then
