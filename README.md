@@ -15,3 +15,4 @@ El script deberá ubicarse en la raíz del proyecto. Netcat no debe ser instalad
 
 
 #### Solucion:
+Se crea un Dockerfile a partir de una imagen liviana de alpine en donde se instala netcat. Luego desde el script `validar-echo-server.sh` se toma el valor de la ip del server desde su archivo de configuración, se buildea la imagen mencionada si es que aun no existe y se procede a conectarse a la red del server y establecer su comunicación.
