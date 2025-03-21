@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 MESSAGE="Hello, server!"
 
@@ -10,7 +10,8 @@ IMAGE_NAME="netcat:latest"
 CONTAINER_NAME="netcat-container"
 
 # Buildeo imagen de netcat si no existe
-if ! docker images | grep -q "$IMAGE_NAME"; then
+/usr/bin/docker images | grep -q "$IMAGE_NAME"
+if [ $? -ne 0 ]; then
   docker build -t "$IMAGE_NAME" .
 fi
 
