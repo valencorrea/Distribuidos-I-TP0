@@ -4,12 +4,12 @@ FROM alpine:latest
 RUN apk add netcat-openbsd
 
 # Copio en el mismo directorio el archivo
-COPY ./validar-echo-server.sh /
+#COPY ./validar-echo-server.sh /
 
 # Copio archivo de configuracion
-COPY server/config.ini /server/config.ini
+#COPY server/config.ini /server/config.ini
 
 # Doy permisos de ejecucion
-RUN chmod +x validar-echo-server.sh
+#RUN chmod +x validar-echo-server.sh
 
-ENTRYPOINT ["/validar-echo-server.sh"]
+#ENTRYPOINT ["/validar-echo-server.sh"]
