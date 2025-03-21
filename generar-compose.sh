@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ $# -ne 2 ]; then
     BAD_REQUEST=$(python3 -c "from constants import BAD_REQUEST; print(BAD_REQUEST)")
