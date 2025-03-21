@@ -11,7 +11,7 @@ CONTAINER_NAME="netcat-container"
 
 # Buildeo imagen de netcat si no existe
 if ! docker images | grep -q "$IMAGE_NAME"; then
-  docker build -f ./Dockerfile -t "$IMAGE_NAME" .
+  docker build -t "$IMAGE_NAME" .
 fi
 
 # Me conecto a la red testing_net y luego ejecuto en una shell netcat para enviar mensaje al server y guardarme su respuesta
