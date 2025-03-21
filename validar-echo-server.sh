@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 MESSAGE="Hello, server!"
 
@@ -9,20 +9,17 @@ SERVER_PORT=$(awk -F " = " '/SERVER_PORT/ {print $2}' ./server/config.ini)
 IMAGE_NAME="netcat:latest"
 CONTAINER_NAME="netcat-container"
 
-echo "00000"
-
 # Buildeo imagen de netcat si no existe
 docker images | grep -q "$IMAGE_NAME"
 if [ $? -ne 0 ]; then
   docker build -t "$IMAGE_NAME" .
 fi
 
-echo "1111"
-
 # Me conecto a la red testing_net y luego ejecuto en una shell netcat para enviar mensaje al server y guardarme su respuesta
 RESPONSE=$(docker run --rm --network tp0_testing_net --name "$CONTAINER_NAME" "$IMAGE_NAME" sh -c "
   echo \"$MESSAGE\" | nc -w 2 server $SERVER_PORT
 ")
+
 # Valido resultado
 if [ "$RESPONSE" = "$MESSAGE" ]; then
   echo "action: test_echo_server | result: success"
