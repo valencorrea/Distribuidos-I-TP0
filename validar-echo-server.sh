@@ -14,7 +14,7 @@ if ! docker images | grep -q "$IMAGE_NAME"; then
   docker build -f ./Dockerfile -t "$IMAGE_NAME" .
 fi
 
-# Me conecto a la red testing_net so netcat para enviar mensaje al server y guardo respuesta
+# Me conecto a la red testing_net y luego ejecuto en una shell netcat para enviar mensaje al server y guardarme su respuesta
 RESPONSE=$(docker run --rm --network tp0_testing_net --name "$CONTAINER_NAME" "$IMAGE_NAME" sh -c "
   echo \"$MESSAGE\" | nc -w 2 server $SERVER_PORT
 ")
