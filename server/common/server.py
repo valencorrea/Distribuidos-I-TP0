@@ -20,6 +20,7 @@ class Server:
 
     def _exit_gracefully(self):
         logging.info("Closing server socket...")
+        self._server_socket.shutdown(socket.SHUT_RDWR)
         self._server_socket.close()
 
     def run(self):
