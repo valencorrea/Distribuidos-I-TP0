@@ -111,5 +111,5 @@ func main() {
 	}
 
 	client := common.NewClient(clientConfig)
-    client.StartClientLoop(ctx)
+    client.StartClientLoop()
 }
