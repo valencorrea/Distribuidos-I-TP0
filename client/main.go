@@ -111,16 +111,5 @@ func main() {
 	}
 
 	client := common.NewClient(clientConfig)
-
-	go func() {
-		client.StartClientLoop(ctx)
-	}()
-
-    select {
-	case <-ctx.Done():
-		if client.conn != nil {
-			log.Infof("Cerrando conexión del cliente...")
-			client.conn.Close()
-		}
-	}
+    client.StartClientLoop(ctx)
 }
