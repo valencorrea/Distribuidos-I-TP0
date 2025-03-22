@@ -10,14 +10,15 @@ class Server:
         self._server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._server_socket.bind(('', port))
         self._server_socket.listen(listen_backlog)
+
         signal.signal(signal.SIGTERM, self.exit_gracefully)
         self._continue = True
 
     def exit_gracefully(self, signum, frame):
+        self._continue = False
         self._exit_gracefully()
 
     def _exit_gracefully(self):
-        self._continue = False
         logging.info("Closing server socket...")
         self._server_socket.close()
 
