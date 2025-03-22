@@ -5,8 +5,6 @@ import (
 	"os"
 	"strings"
 	"time"
-	"os/signal"
-	"syscall"
 
 	"github.com/op/go-logging"
 	"github.com/pkg/errors"
@@ -93,13 +91,6 @@ func PrintConfig(v *viper.Viper) {
 }
 
 func main() {
-	//signalChannel := make(chan os.Signal, 1)
-    //signal.Notify(signalChannel, syscall.SIGTERM)
-    //exitChannel := make(chan struct{}) // todo struct?
-
-    ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGTERM)
-    defer stop()
-
     v, err := InitConfig()
 	if err != nil {
 		log.Criticalf("%s", err)
@@ -132,13 +123,4 @@ func main() {
 			client.conn.Close()
 		}
 	}
-
-    //go func(){
-    //    <-signalChannel
-    //    if client.conn != nil {
-    //        log.Infof("Closing client connection...")
-    //        client.conn.Close()
-    //    }
-    //    close(exitChannel)
-    //}()
 }
