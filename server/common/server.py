@@ -4,6 +4,7 @@ import signal
 
 
 class Server:
+    _continue = True
 
     def __init__(self, port, listen_backlog):
         # Initialize server socket
@@ -12,7 +13,6 @@ class Server:
         self._server_socket.listen(listen_backlog)
 
         signal.signal(signal.SIGTERM, self.exit_gracefully)
-        self._continue = True
 
     def exit_gracefully(self, signum, frame):
         self._continue = False
