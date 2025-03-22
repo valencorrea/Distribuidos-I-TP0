@@ -16,8 +16,8 @@ class Server:
 
     def exit_gracefully(self, signum, frame):
         self._continue = False
-        logging.info("Closing server socket...")
-        self._server_socket.close()
+        #logging.info("Closing server socket...")
+        #self._server_socket.close()
 
     def run(self):
         """
