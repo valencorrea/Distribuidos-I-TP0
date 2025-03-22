@@ -93,9 +93,12 @@ func PrintConfig(v *viper.Viper) {
 }
 
 func main() {
-	signalChannel := make(chan os.Signal, 1)
-    signal.Notify(signalChannel, syscall.SIGTERM)
-    exitChannel := make(chan struct{}) // todo struct?
+	//signalChannel := make(chan os.Signal, 1)
+    //signal.Notify(signalChannel, syscall.SIGTERM)
+    //exitChannel := make(chan struct{}) // todo struct?
+
+    ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGTERM)
+    defer stop()
 
     v, err := InitConfig()
 	if err != nil {
@@ -117,14 +120,25 @@ func main() {
 	}
 
 	client := common.NewClient(clientConfig)
-	client.StartClientLoop(exitChannel)
 
-    go func(){
-        <-signalChannel
-        if client.conn != nil {
-            log.Infof("Closing client connection...")
-            client.conn.Close()
-        }
-        close(exitChannel)
-    }()
+	go func() {
+		client.StartClientLoop(ctx)
+	}()
+
+    select {
+	case <-ctx.Done():
+		if client.conn != nil {
+			log.Infof("Cerrando conexión del cliente...")
+			client.conn.Close()
+		}
+	}
+
+    //go func(){
+    //    <-signalChannel
+    //    if client.conn != nil {
+    //        log.Infof("Closing client connection...")
+    //        client.conn.Close()
+    //    }
+    //    close(exitChannel)
+    //}()
 }
