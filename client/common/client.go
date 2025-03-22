@@ -52,12 +52,18 @@ func (c *Client) createClientSocket() error {
 }
 
 // StartClientLoop Send messages to the client until some time threshold is met
-func (c *Client) StartClientLoop() {
+func (c *Client) StartClientLoop(exitChannel chan struct{}) {
 	// There is an autoincremental msgID to identify every message sent
 	// Messages if the message amount threshold has not been surpassed
 	for msgID := 1; msgID <= c.config.LoopAmount; msgID++ {
 		// Create the connection the server in every loop iteration. Send an
-		c.createClientSocket()
+		case <-exitChan:
+            log.Infof("Closing client connection...")
+            if c.conn != nil {
+                c.conn.Close()
+            return
+        default:
+            c.createClientSocket()
 
 		// TODO: Modify the send to avoid short-write
 		fmt.Fprintf(
@@ -67,7 +73,7 @@ func (c *Client) StartClientLoop() {
 			msgID,
 		)
 		msg, err := bufio.NewReader(c.conn).ReadString('\n')
-		defer c.conn.Close()
+		c.conn.Close()
 
 		if err != nil {
 			log.Errorf("action: receive_message | result: fail | client_id: %v | error: %v",
