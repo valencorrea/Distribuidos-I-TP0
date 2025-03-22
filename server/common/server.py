@@ -30,10 +30,11 @@ class Server:
 
         while not self.kill_now:
             client_sock = self.__accept_new_connection()
-            self.__handle_client_connection(client_sock)
-
-            logging.info("Closing client socket...")
-            client_sock.close()
+            try:
+                self.__handle_client_connection(client_sock)
+            finally:
+                logging.info("Closing client socket...")
+                client_sock.close()
 
         self.exit_gracefully()
 
