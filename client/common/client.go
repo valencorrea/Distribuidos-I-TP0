@@ -63,14 +63,14 @@ func (c *Client) StartClientLoop() {
         log.Infof("action: close_client_socket | result: in progress")
 		c.conn.Close()
 		log.Infof("action: close_client_socket | result: success")
-		close(stopChannel)
+		close(exitChannel)
 	}()
 
 	// There is an autoincremental msgID to identify every message sent
 	// Messages if the message amount threshold has not been surpassed
 	for msgID := 1; msgID <= c.config.LoopAmount; msgID++ {
 		select {
-		case <-stopChannel:
+		case <-exitChannel:
 			return
 		default:
             // Create the connection the server in every loop iteration. Send an
