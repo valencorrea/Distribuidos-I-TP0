@@ -16,8 +16,10 @@ class Server:
 
     def exit_gracefully(self, signum, frame):
         self._continue = False
-        logging.info("Closing server socket...")
+        logging.info('action: close_server_socket | result: in_progress')
         self._server_socket.close()
+        logging.info('action: close_server_socket | result: success')
+
 
     def run(self):
         """
@@ -33,11 +35,7 @@ class Server:
 
         while self._continue:
             client_sock = self.__accept_new_connection()
-            try:
-                self.__handle_client_connection(client_sock)
-            finally:
-                logging.info("Closing client socket...")
-                client_sock.close()
+            self.__handle_client_connection(client_sock)
 
     def __handle_client_connection(self, client_sock):
         """
