@@ -19,10 +19,6 @@ class Server:
         logging.info("Closing server socket...")
         self._server_socket.close()
 
-    def _exit_gracefully(self):
-        logging.info("Closing server socket...")
-        self._server_socket.close()
-
     def run(self):
         """
         Dummy Server loop
@@ -42,8 +38,6 @@ class Server:
             finally:
                 logging.info("Closing client socket...")
                 client_sock.close()
-
-        self._exit_gracefully()
 
     def __handle_client_connection(self, client_sock):
         """
