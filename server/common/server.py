@@ -30,13 +30,16 @@ class Server:
 
         while not self.kill_now:
             client_sock = self.__accept_new_connection()
-            self.__handle_client_connection(client_sock)
+            try:
+                self.__handle_client_connection(client_sock)
+            finally:
+                self.exit_gracefully(client_sock)
 
-        self.exit_gracefully()
-
-    def exit_gracefully(self):
+    def exit_gracefully(self, client_sock):
         logging.info("Closing server socket...")
         self._server_socket.close()
+        logging.info("Closing client socket...")
+        client_sock.close()
 
     def __handle_client_connection(self, client_sock):
         """
