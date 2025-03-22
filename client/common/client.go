@@ -60,9 +60,9 @@ func (c *Client) StartClientLoop() {
 
     go func() {
 		<-signalChannel
-        log.Infof("action: close_client_socket | result: in progress",
+        log.Infof("action: close_client_socket | result: in progress")
 		c.conn.Close()
-		log.Infof("action: close_client_socket | result: success",
+		log.Infof("action: close_client_socket | result: success")
 		close(stopChannel)
 	}()
 
@@ -101,7 +101,8 @@ func (c *Client) StartClientLoop() {
 
             // Wait a time between sending one message and the next one
             time.Sleep(c.config.LoopPeriod)
-
         }
-        log.Infof("action: loop_finished | result: success | client_id: %v", c.config.ID)
+    }
+
+    log.Infof("action: loop_finished | result: success | client_id: %v", c.config.ID)
 }
