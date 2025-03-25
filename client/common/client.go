@@ -72,7 +72,8 @@ func (c *Client) StartClientLoop() {
 		select {
 		case <-signalChannel:
     		c.conn.Close()
-            log.Infof("action: close_client_socket | result: fail")
+            log.Infof("action: close_client_socket | result: success")
+            close(signalChannel)
 			return
 		default:
             // Create the connection the server in every loop iteration. Send an
