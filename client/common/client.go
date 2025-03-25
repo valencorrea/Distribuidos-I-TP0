@@ -56,21 +56,22 @@ func (c *Client) createClientSocket() error {
 func (c *Client) StartClientLoop() {
     signalChannel := make(chan os.Signal, 1)
     signal.Notify(signalChannel, syscall.SIGTERM)
-    exitChannel := make(chan struct{})
+    //exitChannel := make(chan struct{})
 
-    go func() {
+    /*go func() {
 		<-signalChannel
         log.Infof("action: close_client_socket | result: in progress")
 		c.conn.Close()
 		log.Infof("action: close_client_socket | result: success")
 		close(exitChannel)
-	}()
+	}()*/
 
 	// There is an autoincremental msgID to identify every message sent
 	// Messages if the message amount threshold has not been surpassed
 	for msgID := 1; msgID <= c.config.LoopAmount; msgID++ {
 		select {
-		case <-exitChannel:
+		case <-signalChannel:
+    		c.conn.Close()
             log.Infof("action: close_client_socket | result: success")
 			return
 		default:
