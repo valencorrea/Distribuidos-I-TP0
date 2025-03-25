@@ -74,3 +74,4 @@ class Server:
             return c
         except OSError as e:
             logging.error("action: accept_connections | result: fail | error: {e}")
+            return None
