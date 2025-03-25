@@ -35,7 +35,9 @@ class Server:
 
         while self._continue:
             client_sock = self.__accept_new_connection()
-            self.__handle_client_connection(client_sock)
+
+            if client_sock:
+                self.__handle_client_connection(client_sock)
 
     def __handle_client_connection(self, client_sock):
         """
@@ -66,6 +68,9 @@ class Server:
 
         # Connection arrived
         logging.info('action: accept_connections | result: in_progress')
-        c, addr = self._server_socket.accept()
-        logging.info(f'action: accept_connections | result: success | ip: {addr[0]}')
-        return c
+        try:
+            c, addr = self._server_socket.accept()
+            logging.info(f'action: accept_connections | result: success | ip: {addr[0]}')
+            return c
+        except OSError as e:
+            logging.error("action: accept_connections | result: fail | error: {e}")
