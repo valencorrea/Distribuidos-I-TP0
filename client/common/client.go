@@ -71,6 +71,7 @@ func (c *Client) StartClientLoop() {
 	for msgID := 1; msgID <= c.config.LoopAmount; msgID++ {
 		select {
 		case <-exitChannel:
+            log.Infof("action: close_client_socket | result: success")
 			return
 		default:
             // Create the connection the server in every loop iteration. Send an
