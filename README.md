@@ -48,3 +48,5 @@ si ocurrio algun error en el servidor.
 
 Desde el lado del servidor, se agrega una instancia de loteria a su estructura. Al recibir un mensaje, este valida lo lee y deserializa. Una vez obtenido el mensaje, en caso de exito crea una `Bet` y guarda la misma utilizando `store_bet(...)`.
 En base al resultado de estas operaciones envia una respuesta al cliente segun lo detallado previamente.
+
+Se puede ver el flujo de la logica ejecutando el comando de logs.
