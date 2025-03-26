@@ -7,7 +7,7 @@ class Lottery:
 
 
     def register_bet(self, msg):
-        if msg[0] != "BET":
+        if msg[0] != "B":
             return None
         bet = Bet(msg[1], msg[2], msg[3], msg[4], msg[5], msg[6])
         store_bets([bet])
