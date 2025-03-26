@@ -57,9 +57,9 @@ class Server:
 
             response = self.lottery.register_bet(msg)
             if response:
-                self.__send_message(client_sock, "S")
+                self.__send_message(client_sock, "S\n")
             else:
-                self.__send_message(client_sock, "E")
+                self.__send_message(client_sock, "E\n")
 
         except OSError as e:
             logging.error("action: receive_message | result: fail | error: {e}")
