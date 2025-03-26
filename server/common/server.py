@@ -92,11 +92,16 @@ class Server:
             logging.info(f'action: accept_connections | result: success | ip: {addr[0]}')
             return c
         except OSError as e:
-            logging.error("action: accept_connections | result: fail | error: {e}")
+            logging.error(f"action: accept_connections | result: fail | error: {e}")
             return None
 
     def __send_message(self, client_sock, message):
         try:
-            client_sock.sendall(message.encode('utf-8'))
+            total_bytes = len(message.encode('utf-8'))
+            sent = 0
+
+            while sent < total_bytes:
+                n = client_sock.send(message.encode('utf-8')[sent:])
+                sent += n
         except Exception as e:
             logging.error(f"action: send_message | result: fail | error: {e}")
