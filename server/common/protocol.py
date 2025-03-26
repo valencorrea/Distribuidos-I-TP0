@@ -16,7 +16,7 @@ class Lottery:
 
     def receive_client_bet(self, client_sock):
         message = b""
-        while True: # todo leer justo lo que me piden
+        while True:
             chunk = client_sock.recv(1024)
             if not chunk:
                 break
