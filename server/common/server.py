@@ -47,16 +47,31 @@ class Server:
         client socket will also be closed
         """
         try:
-            # TODO: Modify the receive to avoid short-reads
-            msg = client_sock.recv(1024).rstrip().decode('utf-8')
+            msg = self.__receive_client_bet(client_sock)
             addr = client_sock.getpeername()
             logging.info(f'action: receive_message | result: success | ip: {addr[0]} | msg: {msg}')
-            # TODO: Modify the send to avoid short-writes
-            client_sock.send("{}\n".format(msg).encode('utf-8'))
+
+            response = register_bet(msg)
+            if response:
+                self.__send_message(client_sock, OK)
+            else:
+                self.__send_message(client_sock, ERROR)
+
         except OSError as e:
             logging.error("action: receive_message | result: fail | error: {e}")
         finally:
             client_sock.close()
+
+    def __receive_client_bet(self, client_sock):
+        message = b""
+        while True: # todo leer justo lo que me piden
+            chunk = client_sock.recv(1024)
+            if not chunk:
+                break
+            message += chunk
+            if b'\n' in chunk:
+                break
+        return message.rstrip().decode('utf-8').split(";")
 
     def __accept_new_connection(self):
         """
