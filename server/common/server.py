@@ -51,31 +51,20 @@ class Server:
         client socket will also be closed
         """
         try:
-            msg = self.__receive_client_bet(client_sock)
+            msg = self.lottery.receive_client_bet(client_sock)
             addr = client_sock.getpeername()
             logging.info(f'action: receive_message | result: success | ip: {addr[0]} | msg: {msg}')
 
             response = self.lottery.register_bet(msg)
             if response:
-                self.__send_message(client_sock, "S\n")
+                self.lottery.send_message(client_sock, "S\n")
             else:
-                self.__send_message(client_sock, "E\n")
+                self.lottery.send_message(client_sock, "E\n")
 
         except OSError as e:
             logging.error("action: receive_message | result: fail | error: {e}")
         finally:
             client_sock.close()
-
-    def __receive_client_bet(self, client_sock):
-        message = b""
-        while True: # todo leer justo lo que me piden
-            chunk = client_sock.recv(1024)
-            if not chunk:
-                break
-            message += chunk
-            if b'\n' in chunk:
-                break
-        return message.rstrip().decode('utf-8').split(";")
 
     def __accept_new_connection(self):
         """
@@ -94,14 +83,3 @@ class Server:
         except OSError as e:
             logging.error(f"action: accept_connections | result: fail | error: {e}")
             return None
-
-    def __send_message(self, client_sock, message):
-        try:
-            total_bytes = len(message.encode('utf-8'))
-            sent = 0
-
-            while sent < total_bytes:
-                n = client_sock.send(message.encode('utf-8')[sent:])
-                sent += n
-        except Exception as e:
-            logging.error(f"action: send_message | result: fail | error: {e}")
