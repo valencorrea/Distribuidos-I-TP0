@@ -48,6 +48,7 @@ func (c *Client) createClientSocket() error {
 			c.config.ID,
 			err,
 		)
+        return err
 	}
 	c.conn = conn
 	return nil
@@ -71,7 +72,14 @@ func (c *Client) StartClientLoop() {
 			return
 		default:
 			// Create the connection the server in every loop iteration. Send an
-			c.createClientSocket()
+			err := c.createClientSocket()
+            if err != nil {
+                log.Errorf("action: receive_message | result: fail | client_id: %v | error: %v",
+					c.config.ID,
+					err,
+				)
+				return
+            }
 
 			// TODO: Modify the send to avoid short-write
 			fmt.Fprintf(
