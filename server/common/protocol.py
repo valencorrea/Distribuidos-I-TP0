@@ -1,6 +1,7 @@
 import logging
 
-from .utils import *
+from .utils import Bet, store_bets
+
 
 class Lottery:
 

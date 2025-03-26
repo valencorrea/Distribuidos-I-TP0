@@ -2,7 +2,7 @@ import socket
 import logging
 import signal
 
-from server.common.protocol import Lottery
+from .protocol import Lottery
 
 
 class Server:
