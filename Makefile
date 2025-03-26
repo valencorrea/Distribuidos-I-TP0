@@ -44,3 +44,8 @@ docker-sigterm-server:
 
 docker-sigterm-client1:
 	docker kill --signal=SIGTERM client1
+.PHONY: docker-sigterm-client1
+
+tp0-unzip:
+	unzip -o ./.data/dataset.zip -d ./.data
+.PHONY: tp0-unzip
