@@ -74,7 +74,7 @@ func (c *Client) StartClientLoop() {
 		case <-signalChannel:
 			c.conn.Close()
 			log.Infof("action: close_client_socket | result: success")
-			c.config.LoopAmount = msgID // To stop loop
+			c.config.LoopAmount = msgID
 			return
 		default:
 			// Create the connection the server in every loop iteration. Send an
