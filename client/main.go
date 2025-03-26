@@ -33,6 +33,11 @@ func InitConfig() (*viper.Viper, error) {
 
 	// Add env variables supported
 	v.BindEnv("id")
+	v.BindEnv("name")
+	v.BindEnv("surname")
+	v.BindEnv("id", "number")
+	v.BindEnv("date", "of", "birth")
+	v.BindEnv("bet", "number")
 	v.BindEnv("server", "address")
 	v.BindEnv("loop", "period")
 	v.BindEnv("loop", "amount")
@@ -91,7 +96,7 @@ func PrintConfig(v *viper.Viper) {
 }
 
 func main() {
-    v, err := InitConfig()
+	v, err := InitConfig()
 	if err != nil {
 		log.Criticalf("%s", err)
 	}
@@ -111,5 +116,5 @@ func main() {
 	}
 
 	client := common.NewClient(clientConfig)
-    client.StartClientLoop()
+	client.StartClientLoop()
 }
