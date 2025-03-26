@@ -2,6 +2,8 @@ import socket
 import logging
 import signal
 
+from server.common.protocol import Lottery
+
 
 class Server:
 
@@ -13,6 +15,8 @@ class Server:
 
         signal.signal(signal.SIGTERM, self.exit_gracefully)
         self._continue = True
+
+        self.lottery = Lottery()
 
     def exit_gracefully(self, signum, frame):
         self._continue = False
@@ -51,11 +55,11 @@ class Server:
             addr = client_sock.getpeername()
             logging.info(f'action: receive_message | result: success | ip: {addr[0]} | msg: {msg}')
 
-            response = register_bet(msg)
+            response = self.lottery.register_bet(msg)
             if response:
-                self.__send_message(client_sock, OK)
+                self.__send_message(client_sock, "S")
             else:
-                self.__send_message(client_sock, ERROR)
+                self.__send_message(client_sock, "E")
 
         except OSError as e:
             logging.error("action: receive_message | result: fail | error: {e}")
@@ -90,3 +94,9 @@ class Server:
         except OSError as e:
             logging.error("action: accept_connections | result: fail | error: {e}")
             return None
+
+    def __send_message(self, client_sock, message):
+        try:
+            client_sock.sendall(message.encode('utf-8'))
+        except Exception as e:
+            logging.error(f"action: send_message | result: fail | error: {e}")
