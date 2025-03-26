@@ -6,7 +6,9 @@ import (
 )
 
 func formatBetMessage(c *Client) string {
-	return fmt.Sprintf("B;%s;%s;%s;%s;%s;%s\n", c.config.ID, c.config.Name, c.config.Surname, c.config.IDNumber, c.config.DateOfBirth, c.config.BetNumber)
+	message := fmt.Sprintf("B;%s;%s;%s;%s;%s;%s\n", c.config.ID, c.config.Name, c.config.Surname, c.config.IDNumber, c.config.DateOfBirth, c.config.BetNumber)
+	log.Infof("action: sending_message | result: success | message: %v", message)
+	return message
 }
 
 func writeBetMessage(c *Client, message string) error {
