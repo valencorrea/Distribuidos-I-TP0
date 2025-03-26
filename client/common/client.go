@@ -72,8 +72,8 @@ func (c *Client) StartClientLoop() {
 		default:
 			// Create the connection the server in every loop iteration. Send an
 			err := c.createClientSocket()
-            if err != nil {
-                log.Errorf("action: receive_message | result: fail | client_id: %v | error: %v",
+			if err != nil {
+				log.Errorf("action: create_client_socket | result: fail | client_id: %v | error: %v",
 					c.config.ID,
 					err,
 				)
