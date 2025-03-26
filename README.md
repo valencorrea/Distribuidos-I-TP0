@@ -30,3 +30,21 @@ Se deberá implementar un módulo de comunicación entre el cliente y el servido
 
 
 #### Solucion:
+Desde la parte del cliente se suman los nuevos campos `nombre, apellido, documento, fecha de nacimiento y numero apostado` como se solicito en el enunciado. Estos valores se sumaron al .yaml y son interpretados como variables de entorno desde el `main.go`. En el flujo se invoca a realizar una apuesta, en donde se formatea el mensaje a enviar al server y luego se envia, teniendo en cuenta la cantidad de bytes restantes por mandar. 
+El protocolo que se definio aqui es:
+
+`B,{id},{nombre},{apellido},{documento},{nacimiento},{numero}`
+
+en donde B indica que el mensaje pertenece a una apuesta.
+De no ocurrir errores, se espera la respuesta del servidor. Las posibles opciones aqui son:
+
+`S`
+
+equivalente a una respuesta exitosa, o bien
+
+`E`
+
+si ocurrio algun error en el servidor.
+
+Desde el lado del servidor, se agrega una instancia de loteria a su estructura. Al recibir un mensaje, este valida lo lee y deserializa. Una vez obtenido el mensaje, en caso de exito crea una `Bet` y guarda la misma utilizando `store_bet(...)`.
+En base al resultado de estas operaciones envia una respuesta al cliente segun lo detallado previamente.
