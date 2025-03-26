@@ -67,7 +67,7 @@ func (c *Client) StartClientLoop() {
                 c.conn.Close()
                 log.Infof("action: close_client_socket | result: success")
             }
-            c.config.LoopAmount = msgID
+            msgID = c.config.LoopAmount+1
 			return
 		default:
 			// Create the connection the server in every loop iteration. Send an
