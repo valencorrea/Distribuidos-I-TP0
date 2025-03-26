@@ -91,7 +91,7 @@ func PrintConfig(v *viper.Viper) {
 }
 
 func main() {
-	v, err := InitConfig()
+    v, err := InitConfig()
 	if err != nil {
 		log.Criticalf("%s", err)
 	}
@@ -111,5 +111,5 @@ func main() {
 	}
 
 	client := common.NewClient(clientConfig)
-	client.StartClientLoop()
+    client.StartClientLoop()
 }

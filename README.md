@@ -2,17 +2,20 @@
 
 ## Parte 1: Introducción a Docker
 
-### Ejercicio N°3:
+### Ejercicio N°4:
 
 #### Requerimientos:
-Crear un script de bash `validar-echo-server.sh` que permita verificar el correcto funcionamiento del servidor utilizando el comando `netcat` para interactuar con el mismo. 
-Dado que el servidor es un echo server, se debe enviar un mensaje al servidor y esperar recibir el mismo mensaje enviado.
+Modificar servidor y cliente para que ambos sistemas terminen de forma graceful al recibir la signal SIGTERM. 
 
-En caso de que la validación sea exitosa imprimir: `action: test_echo_server | result: success`, de lo contrario imprimir:`action: test_echo_server | result: fail`.
-
-El script deberá ubicarse en la raíz del proyecto. Netcat no debe ser instalado en la máquina _host_ y no se pueden exponer puertos del servidor para realizar la comunicación (hint: `docker network`). `
-
-
+Terminar la aplicación de forma graceful implica que todos los file descriptors 
+(entre los que se encuentran archivos, sockets, threads y procesos) deben cerrarse correctamente antes que el thread de la aplicación principal muera. 
+Loguear mensajes en el cierre de cada recurso (hint: Verificar que hace el flag -t utilizado en el comando docker compose down).
 
 #### Solucion:
-Se crea un Dockerfile a partir de una imagen liviana de alpine en donde se instala netcat. Luego desde el script `validar-echo-server.sh` se toma el valor de la ip del server desde su archivo de configuración, se buildea la imagen mencionada si es que aun no existe y se procede a conectarse a la red del server y establecer su comunicación.
+En lo que respecta al servidor, se da aviso a traves de signal que cuando se reciba la señal `SIGTERM` se debera invocar `exit_gracefully`. Esta lo que hace es editar la variable
+que controla el loop principal y a su vez cierra el socket del server. Por otro lado tambien se ejecuta el llamado de accept del socket dentro de una 
+estructura try catch ya que ante errores arroja la excepcion `OSError: [Errno 9] Bad file descriptor`.
+
+Por otro lado, desde el cliente se crea un canal al cual tambien se le indica escuchar la syscall `SIGTERM`. En caso de recibirla se cierra la conexion abierta del cliente y finaliza el loop.
+
+Para ejecutar el ejercicio se pueden correr los comandos `docker-sigterm-{server/client1}`.
