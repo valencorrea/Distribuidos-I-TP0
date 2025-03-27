@@ -59,7 +59,9 @@ class Server:
 
         for bet in all_bets:
             if has_won(bet):
-                winners[bet.agency] = winners[bet.agency].append(bet.document)
+                documents = winners[bet.agency]
+
+                winners[bet.agency] = documents.append(bet.document)
 
         for agency, winner in winners.items():
             self.lottery.send_message(self._clients[agency], f"W;{';'.join(winner)}\n")
