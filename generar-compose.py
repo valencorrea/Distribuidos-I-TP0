@@ -8,7 +8,7 @@ def write_server(file, clients):
     file.write(YAML_TAB + YAML_TAB + "entrypoint: python3 /main.py\n")
     file.write(YAML_TAB + YAML_TAB + "environment:\n")
     file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- PYTHONUNBUFFERED=1\n")
-    file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- CLIENTS_AMOUNT=" + str(clients) + "\n")
+    file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- CLIENTS_AMOUNT=" + clients + "\n")
     file.write(YAML_TAB + YAML_TAB + "volumes:\n")
     file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- ./server/config.ini:/config.ini\n")
     file.write(YAML_TAB + YAML_TAB + "networks:\n")
