@@ -163,7 +163,6 @@ func (c *Client) doBets() error {
 			return err
 		}
 
-		line += c.config.ID + ";F\n"
 		message, err := formatBetLine(c, line)
 		if err != nil {
 			log.Errorf("action: parsing_line | result: fail | client_id: %v | error: %v", c.config.ID, err)
@@ -171,6 +170,15 @@ func (c *Client) doBets() error {
 		}
 		batch = append(batch, message)
 		lineIndex++
+	}
+
+	line = "F;" + c.config.ID + "\n"
+	message, err := formatBetLine(c, line)
+	batch = append(batch, message)
+	err = writeBetMessage(c, batch)
+	if err != nil {
+		log.Errorf("action: send_batch_to_server | result: fail | client_id: %v | error: %v", c.config.ID, err)
+		return err
 	}
 
 	err = c.receiveBetResponse()

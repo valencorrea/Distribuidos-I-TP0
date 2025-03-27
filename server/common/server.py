@@ -59,15 +59,21 @@ class Server:
         }
 
         for bet in all_bets:
+            logging.info(f'QQQQQ: {bet.document}')
+            logging.info(f'QQQQQ: {bet.number}')
             if has_won(bet):
                 winners[bet.agency].append(bet.document)
 
         for agency, sock in self._clients.items():
+            documents = winners[agency]
+            logging.info(f'1111111: {documents}')
+            join = ";".join(documents)
+            logging.info(f'2222222: {join}')
+
             winner_message = f"W;{';'.join(winners[agency])}\n"
             self.lottery.send_message(sock, winner_message)
 
         logging.info(f'action: sorteo | result: success')
-        time.sleep(50)
 
 
     def __handle_client_connection(self, client_sock):
