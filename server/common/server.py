@@ -63,8 +63,9 @@ class Server:
 
                 winners[bet.agency] = documents.append(bet.document)
 
-        for agency, winner in winners.items():
-            self.lottery.send_message(self._clients[agency], f"W;{';'.join(winner)}\n")
+        for agency, sock in self._clients.items():
+            winner_message = f"W;{';'.join(winners[agency])}\n"
+            self.lottery.send_message(sock, winner_message)
 
         logging.info(f'action: sorteo | result: success')
 
