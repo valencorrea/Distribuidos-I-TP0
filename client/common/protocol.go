@@ -57,7 +57,7 @@ func decodeBetResponse(c *Client) error {
 		log.Infof("action: reading_bet_response | result: success | msg: %v", msg)
 	} else if msg[0] == 'W' {
 		documents := strings.Split(msg, ";")
-		log.Infof("action: consulta_ganadores | result: success | cant_ganadores: %v.", len(documents)-1)
+		log.Infof("action: consulta_ganadores | result: success | cant_ganadores: %v", len(documents)-1)
 	}
 	return nil
 }
