@@ -11,7 +11,7 @@ class Lottery:
         bets = []
         eof = False
 
-        for line in msg: # todo handlear mensaje final
+        for line in msg:
             fields = line.split(";")
             if fields[0] == "F":
                 eof = True
@@ -28,11 +28,8 @@ class Lottery:
 
         store_bets(bets)
 
-        if eof:
-            if successfull_bets == len(msg) - 1:
-                logging.info(f'action: apuesta_recibida | result: success | cantidad: {successfull_bets}')
-            else:
-                logging.error(f'action: apuesta_recibida | result: fail | cantidad: {successfull_bets}')
+        if successfull_bets == len(bets):
+            logging.info(f'action: apuesta_recibida | result: success | cantidad: {successfull_bets}')
 
         return eof
 
