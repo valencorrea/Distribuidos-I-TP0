@@ -60,9 +60,7 @@ class Server:
 
         for bet in all_bets:
             if has_won(bet):
-                documents = winners.get(bet.agency, [])
-                documents.append(bet.document)
-                winners[bet.agency] = documents
+                winners[bet.agency].append(bet.document)
 
         for agency, sock in self._clients.items():
             winner_message = f"W;{';'.join(winners[agency])}\n"

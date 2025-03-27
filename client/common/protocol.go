@@ -63,7 +63,7 @@ func decodeBetResponse(c *Client) error {
 }
 
 func writeNoMoreBetsMessage(c *Client) error {
-	message := []byte("F\n")
+	message := []byte(c.config.ID + "F\n")
 
 	err := _writeBetMessage(c, message)
 	if err != nil {

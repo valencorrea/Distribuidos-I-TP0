@@ -15,7 +15,8 @@ class Lottery:
 
         for line in msg:
             fields = line.split(";")
-            if fields[0] == "F":
+            if fields[1] == "F":
+                client_id = int(fields[0])
                 eof = True
                 break
 
