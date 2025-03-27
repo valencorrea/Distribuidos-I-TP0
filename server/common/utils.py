@@ -17,6 +17,7 @@ class Bet:
         birthdate must be passed with format: 'YYYY-MM-DD'.
         number must be passed with integer format.
         """
+        print(agency)
         self.agency = int(agency)
         self.first_name = first_name
         self.last_name = last_name
