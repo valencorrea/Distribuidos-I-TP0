@@ -41,9 +41,9 @@ class Lottery:
         return response
 
     def receive_client_bets(self, client_sock):
+        logging.info('action: receive_client_bets | result: in_progress')
         message = b""
-        chunk = client_sock.recv(80000)
-        while chunk != b"":
+        while True:
             chunk = client_sock.recv(80000)
             if not chunk:
                 break

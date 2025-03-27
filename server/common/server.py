@@ -52,6 +52,7 @@ class Server:
         """
         try:
             while True:
+                logging.info('action: handle_client_connection | result: in_progress')
                 msg = self.lottery.receive_client_bets(client_sock)
                 addr = client_sock.getpeername()
                 logging.info(f'action: receive_message | result: success | ip: {addr[0]} | msg: {msg}')
