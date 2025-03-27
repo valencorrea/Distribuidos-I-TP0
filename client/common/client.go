@@ -138,9 +138,8 @@ func (c *Client) doBets() error {
 	lineIndex := 0
 
 	for {
-		log.Infof("indexn %v", lineIndex)
 		if lineIndex == c.config.BatchMaxAmount {
-			log.Infof("action: send_chunk | result: in_progress | chunck: %v", line)
+			log.Infof("action: send_chunk | result: in_progress | line index: %v", lineIndex)
 			err := writeBetMessage(c, batch)
 			if err != nil {
 				log.Errorf("action: send_batch_to_server | result: fail | client_id: %v | error: %v", c.config.ID, err)
