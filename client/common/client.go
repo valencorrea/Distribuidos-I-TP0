@@ -2,6 +2,7 @@ package common
 
 import (
 	"bufio"
+	"io"
 	"net"
 	"os"
 	"os/signal"
@@ -80,11 +81,11 @@ func (c *Client) StartClientLoop() {
 				c.config.ID,
 				err,
 			)
+			c.conn.Close()
 			return
 		}
 
 		err = c.doBets()
-
 		if err != nil {
 			log.Errorf("action: do_bet | result: fail | client_id: %v | error: %v",
 				c.config.ID,
@@ -98,7 +99,6 @@ func (c *Client) StartClientLoop() {
 			c.config.ID)
 
 		err = c.receiveBetResponse()
-
 		if err != nil {
 			log.Errorf("action: receive_message | result: fail | client_id: %v | error: %v",
 				c.config.ID,
@@ -122,7 +122,6 @@ func (c *Client) StartClientLoop() {
 
 func (c *Client) doBets() error {
 	file, err := os.Open("../../.data/agency.csv")
-
 	if err != nil {
 		log.Errorf("action: opening_bet_file | result: fail | client_id: %v | error: %v",
 			c.config.ID,
@@ -149,14 +148,12 @@ func (c *Client) doBets() error {
 			batch = nil
 		}
 		line, err = reader.ReadString('\n')
-		if err != nil && err.Error() != "EOF" {
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
 			log.Errorf("action: reading_line | result: fail | client_id: %v | error: %v", c.config.ID, err)
-			break
-		}
-
-		if err != nil && err.Error() == "EOF" && len(line) == 0 {
-			log.Infof("action: reading_line | result: success | client_id: %v", c.config.ID)
-			break
+			return err
 		}
 
 		message, err := formatBetLine(c, line)
@@ -173,6 +170,11 @@ func (c *Client) doBets() error {
 		if err != nil {
 			log.Errorf("action: send_batch_to_server | result: fail | client_id: %v | error: %v", c.config.ID, err)
 		}
+	}
+
+	err = writeNoMoreBetsMessage(c)
+	if err != nil {
+		log.Errorf("action: send_batch_to_server | result: fail | client_id: %v | error: %v", c.config.ID, err)
 	}
 	return nil
 }

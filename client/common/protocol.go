@@ -16,7 +16,17 @@ func formatBetLine(c *Client, line string) ([]byte, error) {
 	return []byte(message), nil
 }
 
-func writeBetMessage(c *Client, message []byte) error {
+func writeBetMessage(c *Client, message [][]byte) error {
+	for _, msg := range message {
+		err := _writeBetMessage(c, msg)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func _writeBetMessage(c *Client, message []byte) error {
 	bytesWritten := 0
 	totalBytes := len(message)
 
@@ -46,5 +56,16 @@ func decodeBetResponse(c *Client) error {
 	}
 
 	log.Infof("action: reading_bet_response | result: success | msg: %v", msg)
+	return nil
+}
+
+func writeNoMoreBetsMessage(c *Client) error {
+	message := []byte("F\n")
+
+	err := _writeBetMessage(c, message)
+	if err != nil {
+		log.Errorf("action: writing_no_more_bets_message | result: fail | client_id: %v | error: %v", c.config.ID, err)
+		return err
+	}
 	return nil
 }

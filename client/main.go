@@ -96,6 +96,7 @@ func PrintConfig(v *viper.Viper) {
 		v.GetString("server.address"),
 		v.GetInt("loop.amount"),
 		v.GetDuration("loop.period"),
+		v.GetString("batch.maxAmount"),
 		v.GetString("log.level"),
 	)
 }
@@ -114,15 +115,16 @@ func main() {
 	PrintConfig(v)
 
 	clientConfig := common.ClientConfig{
-		ServerAddress: v.GetString("server.address"),
-		ID:            v.GetString("id"),
-		Name:          v.GetString("name"),
-		Surname:       v.GetString("surname"),
-		IdNumber:      v.GetString("id.number"),
-		DateOfBirth:   v.GetString("date.of.birth"),
-		BetNumber:     v.GetString("bet.number"),
-		LoopAmount:    v.GetInt("loop.amount"),
-		LoopPeriod:    v.GetDuration("loop.period"),
+		ServerAddress:  v.GetString("server.address"),
+		ID:             v.GetString("id"),
+		Name:           v.GetString("name"),
+		Surname:        v.GetString("surname"),
+		IdNumber:       v.GetString("id.number"),
+		DateOfBirth:    v.GetString("date.of.birth"),
+		BetNumber:      v.GetString("bet.number"),
+		LoopAmount:     v.GetInt("loop.amount"),
+		LoopPeriod:     v.GetDuration("loop.period"),
+		BatchMaxAmount: v.GetInt("batch.maxAmount"),
 	}
 
 	client := common.NewClient(clientConfig)
