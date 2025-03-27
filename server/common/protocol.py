@@ -11,7 +11,7 @@ class Lottery:
         bets = []
         eof = False
         message_client = False
-        client_id = 1
+        client_id = 0
 
         for line in msg:
             fields = line.split(";")
