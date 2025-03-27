@@ -104,7 +104,6 @@ func (c *Client) StartClientLoop() {
 			c.config.IdNumber, c.config.BetNumber)
 
 		// Wait a time between sending one message and the next one
-		time.Sleep(c.config.LoopPeriod)
 	}
 
 	log.Infof("action: loop_finished | result: success | client_id: %v", c.config.ID)
@@ -132,6 +131,7 @@ func (c *Client) doBets() error {
 		if lineIndex == c.config.BatchMaxAmount {
 			log.Infof("action: send_chunk | result: in_progress | line index: %v", lineIndex)
 			err := writeBetMessage(c, batch)
+			time.Sleep(c.config.LoopPeriod)
 			if err != nil {
 				log.Errorf("action: send_batch_to_server | result: fail | client_id: %v | error: %v", c.config.ID, err)
 				return err
@@ -153,6 +153,7 @@ func (c *Client) doBets() error {
 		if err != nil {
 			if err == io.EOF {
 				err := writeBetMessage(c, batch)
+				time.Sleep(c.config.LoopPeriod)
 				if err != nil {
 					log.Errorf("action: send_batch_to_server | result: fail | client_id: %v | error: %v", c.config.ID, err)
 					return err
@@ -175,6 +176,7 @@ func (c *Client) doBets() error {
 	line = "F;" + c.config.ID + "\n"
 	batch = append(batch, []byte(line))
 	err = writeBetMessage(c, batch)
+	time.Sleep(c.config.LoopPeriod)
 	if err != nil {
 		log.Errorf("action: send_batch_to_server | result: fail | client_id: %v | error: %v", c.config.ID, err)
 		return err

@@ -67,6 +67,8 @@ class Server:
             self.lottery.send_message(sock, winner_message)
 
         logging.info(f'action: sorteo | result: success')
+        self._server_socket.close()
+
 
 
     def __handle_client_connection(self, client_sock):
