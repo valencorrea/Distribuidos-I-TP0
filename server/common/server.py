@@ -86,8 +86,7 @@ class Server:
                     self.lottery.send_message(client_sock, "E\n")
                     break
                 if eof is True:
-                    self.lottery.send_message(client_sock, "F\n")
-                    self._clients[client_id] = client_sock
+                    self._clients[client_id] = client_sock # lo hago una vez cuando termine de leer el archivo
                     break
                 elif bets:
                     self.lottery.send_message(client_sock, "S\n")
