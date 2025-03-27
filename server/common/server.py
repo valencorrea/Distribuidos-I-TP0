@@ -51,15 +51,18 @@ class Server:
         client socket will also be closed
         """
         try:
-            msg = self.lottery.receive_client_bets(client_sock)
-            addr = client_sock.getpeername()
-            logging.info(f'action: receive_message | result: success | ip: {addr[0]} | msg: {msg}')
+            while True:
+                msg = self.lottery.receive_client_bets(client_sock)
+                addr = client_sock.getpeername()
+                logging.info(f'action: receive_message | result: success | ip: {addr[0]} | msg: {msg}')
 
-            response = self.lottery.register_bet(msg)
-            if response:
-                self.lottery.send_message(client_sock, "S\n")
-            else:
-                self.lottery.send_message(client_sock, "E\n")
+                response = self.lottery.register_bet(msg)
+                if response:
+                    self.lottery.send_message(client_sock, "S\n")
+                    break
+                else:
+                    self.lottery.send_message(client_sock, "E\n")
+                    break
 
         except OSError as e:
             logging.error("action: receive_message | result: fail | error: {e}")
