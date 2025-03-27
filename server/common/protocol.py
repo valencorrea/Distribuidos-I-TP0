@@ -15,12 +15,12 @@ class Lottery:
 
         for line in msg:
             fields = line.split(";")
-            if fields[0] == "F":
+            if len(fields) == 0 or fields[0] == "F":
                 client_id = int(fields[1])
                 eof = True
                 break
 
-            if fields[0] == "B" and len(fields) != 7:
+            if len(fields) > 0 and fields[0] == "B" and len(fields) != 7:
                 logging.error(f'action: apuesta_recibida | result: fail | cantidad: {successfull_bets}')
                 store_bets(bets)
                 return None, 0, client_id

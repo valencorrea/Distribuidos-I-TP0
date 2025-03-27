@@ -63,11 +63,6 @@ class Server:
                 winners[bet.agency].append(bet.document)
 
         for agency, sock in self._clients.items():
-            documents = winners[agency]
-            logging.info(f'1111111: {documents}')
-            join = ";".join(documents)
-            logging.info(f'2222222: {join}')
-
             winner_message = f"W;{';'.join(winners[agency])}\n"
             self.lottery.send_message(sock, winner_message)
 
