@@ -108,7 +108,7 @@ func (c *Client) StartClientLoop() {
 	}
 
 	log.Infof("action: loop_finished | result: success | client_id: %v", c.config.ID)
-	time.Sleep(15 * time.Second)
+	time.Sleep(c.config.LoopPeriod)
 }
 
 func (c *Client) doBets() error {

@@ -65,9 +65,6 @@ class Server:
                 winners[bet.agency] = documents
 
         for agency, sock in self._clients.items():
-            if agency not in winners or winners[agency] is None:
-                return
-
             winner_message = f"W;{';'.join(winners[agency])}\n"
             self.lottery.send_message(sock, winner_message)
 
