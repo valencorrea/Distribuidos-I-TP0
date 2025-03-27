@@ -28,7 +28,7 @@ def write_client(id, file):
     file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- CLI_BET_NUMBER=" + "111" + str(id) + "\n")
     file.write(YAML_TAB + YAML_TAB + "volumes:\n")
     file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- ./client/config.yaml:/config.yaml\n")
-    file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- ./.data/agency-" + str(id) + ".csv:/agency.csv\n")
+    file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- ./.data/agency-" + str(id) + ".csv:/.data/agency.csv\n")
     file.write(YAML_TAB + YAML_TAB + "networks:\n")
     file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- testing_net\n")
     file.write(YAML_TAB + YAML_TAB + "depends_on:\n")
