@@ -16,6 +16,7 @@ class Lottery:
 
             if line[0] == "B" and len(line) != 7:
                 logging.error(f'action: apuesta_recibida | result: fail | cantidad: ${successfull_bets}')
+                store_bets(bets)
                 return None
 
             bet = Bet(line[1], line[2], line[3], line[4], line[5], line[6])
