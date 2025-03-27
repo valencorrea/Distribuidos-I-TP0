@@ -135,9 +135,10 @@ func (c *Client) doBets() error {
 	var batch [][]byte
 	var line string
 
-	var lineIndex = 0
+	lineIndex := 0
 
 	for {
+		log.Infof("indexn %v", lineIndex)
 		if lineIndex == c.config.BatchMaxAmount {
 			err := writeBetMessage(c, batch)
 			if err != nil {
