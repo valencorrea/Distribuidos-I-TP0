@@ -51,7 +51,7 @@ class Server:
         client socket will also be closed
         """
         try:
-            msg = self.lottery.receive_client_bet(client_sock)
+            msg = self.lottery.receive_client_bets(client_sock)
             addr = client_sock.getpeername()
             logging.info(f'action: receive_message | result: success | ip: {addr[0]} | msg: {msg}')
 

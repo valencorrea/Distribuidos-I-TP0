@@ -26,3 +26,10 @@ Por su parte, el servidor deberá responder con éxito solamente si todas las ap
 
 
 #### Solucion:
+
+
+el server lo decodifica asi
+["1;Camila Rocio;Varela;37130775;1995-05-09;4179", "2;Diego Agustin;Mamani;33259835;1991-01-08;931"]
+
+
+se loguea la cant fallida
