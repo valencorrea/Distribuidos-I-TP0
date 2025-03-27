@@ -108,7 +108,7 @@ func (c *Client) StartClientLoop() {
 	}
 
 	log.Infof("action: loop_finished | result: success | client_id: %v", c.config.ID)
-	time.Sleep(c.config.LoopPeriod)
+	time.Sleep(200 * time.Millisecond)
 }
 
 func (c *Client) doBets() error {
@@ -173,8 +173,7 @@ func (c *Client) doBets() error {
 	}
 
 	line = "F;" + c.config.ID + "\n"
-	message, err := formatBetLine(c, line)
-	batch = append(batch, message)
+	batch = append(batch, []byte(line))
 	err = writeBetMessage(c, batch)
 	if err != nil {
 		log.Errorf("action: send_batch_to_server | result: fail | client_id: %v | error: %v", c.config.ID, err)

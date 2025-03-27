@@ -59,8 +59,6 @@ class Server:
         }
 
         for bet in all_bets:
-            logging.info(f'QQQQQ: {bet.document}')
-            logging.info(f'QQQQQ: {bet.number}')
             if has_won(bet):
                 winners[bet.agency].append(bet.document)
 
