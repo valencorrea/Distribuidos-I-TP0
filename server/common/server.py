@@ -3,18 +3,20 @@ import logging
 import signal
 
 from .protocol import Lottery
+from .utils import load_bets, has_won
 
 
 class Server:
 
-    def __init__(self, port, listen_backlog):
+    def __init__(self, port, listen_backlog, clients_amount):
         # Initialize server socket
         self._server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._server_socket.bind(('', port))
         self._server_socket.listen(listen_backlog)
-
+        self._clients = {}
         signal.signal(signal.SIGTERM, self.exit_gracefully)
         self._continue = True
+        self.clients_amount = clients_amount
 
         self.lottery = Lottery()
 
@@ -37,11 +39,33 @@ class Server:
         # TODO: Modify this program to handle signal to graceful shutdown
         # the server
 
-        while self._continue:
+        index = 0
+
+        while self._continue and index < self.clients_amount:
             client_sock = self.__accept_new_connection()
 
             if client_sock:
                 self.__handle_client_connection(client_sock)
+                index += 1
+
+        all_bets = load_bets()
+        winners = {
+            1: [],
+            2: [],
+            3: [],
+            4: [],
+            5: []
+        }
+
+        for bet in all_bets:
+            if has_won(bet):
+                winners[bet.agency] = winners[bet.agency].append(bet.document)
+
+        for agency, winner in winners.items():
+            self.lottery.send_message(self._clients[agency], f"W;{';'.join(winner)}\n")
+
+        logging.info(f'action: sorteo | result: success')
+
 
     def __handle_client_connection(self, client_sock):
         """
@@ -57,18 +81,16 @@ class Server:
                 addr = client_sock.getpeername()
                 logging.info(f'action: receive_message | result: success | ip: {addr[0]} | msg: {msg}')
 
-                eof, bets = self.lottery.register_bet(msg)
+                eof, bets, client_id = self.lottery.register_bet(msg)
                 if eof is None:
-                    logging.info("1111111111")
                     self.lottery.send_message(client_sock, "E\n")
                     break
                 if eof is True:
                     self.lottery.send_message(client_sock, "F\n")
+                    self._clients[client_id] = client_sock
                     break
                 elif bets:
-                    logging.info("2222222")
                     self.lottery.send_message(client_sock, "S\n")
-
 
         except OSError as e:
             logging.error("action: receive_message | result: fail | error: {e}")

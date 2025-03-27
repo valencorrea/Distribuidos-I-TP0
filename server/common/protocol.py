@@ -11,6 +11,7 @@ class Lottery:
         bets = []
         eof = False
         message_client = False
+        client_id = 0
 
         for line in msg:
             fields = line.split(";")
@@ -21,11 +22,12 @@ class Lottery:
             if fields[0] == "B" and len(fields) != 7:
                 logging.error(f'action: apuesta_recibida | result: fail | cantidad: {successfull_bets}')
                 store_bets(bets)
-                return None, 0
+                return None, 0, client_id
 
             bet = Bet(fields[1], fields[2], fields[3], fields[4], fields[5], fields[6])
             bets.append(bet)
             successfull_bets += 1
+            client_id = fields[1]
 
         store_bets(bets)
 
@@ -33,7 +35,7 @@ class Lottery:
             message_client = True
             logging.info(f'action: apuesta_recibida | result: success | cantidad: {successfull_bets}')
 
-        return eof, message_client
+        return eof, message_client, client_id
 
     def receive_client_bets(self, client_sock):
         logging.info('action: receive_client_bets | result: in_progress')

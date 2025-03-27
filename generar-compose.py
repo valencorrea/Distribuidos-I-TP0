@@ -1,13 +1,14 @@
 import sys
 from constants import WRITE_MODE, YAML_TAB
 
-def write_server(file):
+def write_server(file, clients):
     file.write(YAML_TAB + "server:\n")
     file.write(YAML_TAB + YAML_TAB + "container_name: server\n")
     file.write(YAML_TAB + YAML_TAB + "image: server:latest\n")
     file.write(YAML_TAB + YAML_TAB + "entrypoint: python3 /main.py\n")
     file.write(YAML_TAB + YAML_TAB + "environment:\n")
     file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- PYTHONUNBUFFERED=1\n")
+    file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- CLIENTS_AMOUNT=" + str(clients) + "\n")
     file.write(YAML_TAB + YAML_TAB + "volumes:\n")
     file.write(YAML_TAB + YAML_TAB + YAML_TAB + "- ./server/config.ini:/config.ini\n")
     file.write(YAML_TAB + YAML_TAB + "networks:\n")
@@ -41,7 +42,7 @@ def write_clients(file, clients):
 
 def write_services(file, clients):
     file.write("services:\n")
-    write_server(file)
+    write_server(file, clients)
     write_clients(file, clients)
 
 def write_networks(file):
