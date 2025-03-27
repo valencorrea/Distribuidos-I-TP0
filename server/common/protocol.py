@@ -11,16 +11,16 @@ class Lottery:
         bets = []
 
         for line in msg: # todo handlear mensaje final
-            if line[0] == "F":
+            fields = line.split(";")
+            if fields[0] == "F":
                 break
 
-            if line[0] == "B" and len(line.split(';')) != 7:
-                logging.info(len(line))
+            if fields[0] == "B" and len(fields) != 7:
                 logging.error(f'action: apuesta_recibida | result: fail | cantidad: ${successfull_bets}')
                 store_bets(bets)
                 return None
 
-            bet = Bet(line[1], line[2], line[3], line[4], line[5], line[6])
+            bet = Bet(fields[1], fields[2], fields[3], fields[4], fields[5], fields[6])
             bets.append(bet)
             successfull_bets += 1
 
