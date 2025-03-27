@@ -26,7 +26,7 @@ class Lottery:
 
         store_bets(bets)
 
-        if successfull_bets == len(msg) - 1:
+        if successfull_bets == len(msg):
             logging.info(f'action: apuesta_recibida | result: success | cantidad: ${successfull_bets}')
 
         return bets
