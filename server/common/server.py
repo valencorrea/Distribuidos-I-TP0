@@ -59,9 +59,11 @@ class Server:
 
                 eof = self.lottery.register_bet(msg)
                 if eof is None:
+                    logging.info("1111111111")
                     self.lottery.send_message(client_sock, "E\n")
                     break
                 elif eof is True:
+                    logging.info("2222222")
                     self.lottery.send_message(client_sock, "S\n")
                     break
 
