@@ -140,7 +140,7 @@ func (c *Client) doBets() error {
 	for {
 		log.Infof("indexn %v", lineIndex)
 		if lineIndex == c.config.BatchMaxAmount {
-			log.Infof("action: send_chunk | result: in_progress | chunck: %v", batch)
+			log.Infof("action: send_chunk | result: in_progress | chunck: %v", line)
 			err := writeBetMessage(c, batch)
 			if err != nil {
 				log.Errorf("action: send_batch_to_server | result: fail | client_id: %v | error: %v", c.config.ID, err)
@@ -148,28 +148,23 @@ func (c *Client) doBets() error {
 			}
 			lineIndex = 0
 			batch = nil
-		}
-		line, err = reader.ReadString('\n')
-		if err != nil {
-			if err == io.EOF {
+		} else {
+			line, err = reader.ReadString('\n')
+			if err != nil {
+				if err == io.EOF {
+					break
+				}
+				log.Errorf("action: reading_line | result: fail | client_id: %v | error: %v", c.config.ID, err)
+				return err
+			}
+
+			message, err := formatBetLine(c, line)
+			if err != nil {
+				log.Errorf("action: parsing_line | result: fail | client_id: %v | error: %v", c.config.ID, err)
 				break
 			}
-			log.Errorf("action: reading_line | result: fail | client_id: %v | error: %v", c.config.ID, err)
-			return err
-		}
-
-		message, err := formatBetLine(c, line)
-		if err != nil {
-			log.Errorf("action: parsing_line | result: fail | client_id: %v | error: %v", c.config.ID, err)
-			break
-		}
-		batch = append(batch, message)
-		lineIndex++
-	}
-	if len(batch) > 0 {
-		err = writeBetMessage(c, batch)
-		if err != nil {
-			log.Errorf("action: send_batch_to_server | result: fail | client_id: %v | error: %v", c.config.ID, err)
+			batch = append(batch, message)
+			lineIndex++
 		}
 	}
 
