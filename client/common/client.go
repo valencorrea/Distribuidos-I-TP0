@@ -98,16 +98,6 @@ func (c *Client) StartClientLoop() {
 		log.Infof("action: do_bet | result: success | client_id: %v",
 			c.config.ID)
 
-		err = c.receiveBetResponse()
-		if err != nil {
-			log.Errorf("action: receive_message | result: fail | client_id: %v | error: %v",
-				c.config.ID,
-				err,
-			)
-			c.conn.Close()
-			return
-		}
-
 		c.conn.Close()
 
 		log.Infof("action: apuesta_enviada | result: success | dni: %v | numero: %v",
@@ -145,6 +135,16 @@ func (c *Client) doBets() error {
 				log.Errorf("action: send_batch_to_server | result: fail | client_id: %v | error: %v", c.config.ID, err)
 				return err
 			}
+
+			err = c.receiveBetResponse()
+			if err != nil {
+				log.Errorf("action: receive_message | result: fail | client_id: %v | error: %v",
+					c.config.ID,
+					err,
+				)
+				c.conn.Close()
+			}
+
 			lineIndex = 0
 			batch = nil
 		}
@@ -175,6 +175,16 @@ func (c *Client) doBets() error {
 	if err != nil {
 		log.Errorf("action: send_batch_to_server | result: fail | client_id: %v | error: %v", c.config.ID, err)
 	}
+
+	err = c.receiveBetResponse()
+	if err != nil {
+		log.Errorf("action: receive_message | result: fail | client_id: %v | error: %v",
+			c.config.ID,
+			err,
+		)
+		c.conn.Close()
+	}
+
 	return nil
 }
 

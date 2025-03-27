@@ -53,9 +53,11 @@ func decodeBetResponse(c *Client) error {
 	}
 	if len(msg) > 0 && msg[0] == 'E' {
 		log.Criticalf("action: reading_bet_response | result: fail")
+	} else if msg[0] == 'S' {
+		log.Infof("action: reading_bet_response | result: success | msg: %v", msg)
+	} else {
+		c.conn.Close()
 	}
-
-	log.Infof("action: reading_bet_response | result: success | msg: %v", msg)
 	return nil
 }
 
