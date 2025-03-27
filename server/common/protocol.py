@@ -18,7 +18,7 @@ class Lottery:
                 break
 
             if fields[0] == "B" and len(fields) != 7:
-                logging.error(f'action: apuesta_recibida | result: fail | cantidad: ${str(successfull_bets)}')
+                logging.error(f'action: apuesta_recibida | result: fail | cantidad: {successfull_bets}')
                 store_bets(bets)
                 return None
 
@@ -34,7 +34,7 @@ class Lottery:
             comparison = len(msg)
 
         if successfull_bets == comparison:
-            logging.info(f'action: apuesta_recibida | result: success | cantidad: ${str(successfull_bets)}')
+            logging.info(f'action: apuesta_recibida | result: success | cantidad: {successfull_bets}')
 
         return bets
 
