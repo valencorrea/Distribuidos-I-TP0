@@ -151,6 +151,11 @@ func (c *Client) doBets() error {
 		line, err = reader.ReadString('\n')
 		if err != nil {
 			if err == io.EOF {
+				err := writeBetMessage(c, batch)
+				if err != nil {
+					log.Errorf("action: send_batch_to_server | result: fail | client_id: %v | error: %v", c.config.ID, err)
+					return err
+				}
 				break
 			}
 			log.Errorf("action: reading_line | result: fail | client_id: %v | error: %v", c.config.ID, err)
