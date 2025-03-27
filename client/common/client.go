@@ -148,24 +148,23 @@ func (c *Client) doBets() error {
 			}
 			lineIndex = 0
 			batch = nil
-		} else {
-			line, err = reader.ReadString('\n')
-			if err != nil {
-				if err == io.EOF {
-					break
-				}
-				log.Errorf("action: reading_line | result: fail | client_id: %v | error: %v", c.config.ID, err)
-				return err
-			}
-
-			message, err := formatBetLine(c, line)
-			if err != nil {
-				log.Errorf("action: parsing_line | result: fail | client_id: %v | error: %v", c.config.ID, err)
+		}
+		line, err = reader.ReadString('\n')
+		if err != nil {
+			if err == io.EOF {
 				break
 			}
-			batch = append(batch, message)
-			lineIndex++
+			log.Errorf("action: reading_line | result: fail | client_id: %v | error: %v", c.config.ID, err)
+			return err
 		}
+
+		message, err := formatBetLine(c, line)
+		if err != nil {
+			log.Errorf("action: parsing_line | result: fail | client_id: %v | error: %v", c.config.ID, err)
+			break
+		}
+		batch = append(batch, message)
+		lineIndex++
 	}
 
 	err = writeNoMoreBetsMessage(c)
