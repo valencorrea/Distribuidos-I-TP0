@@ -15,6 +15,7 @@ class Lottery:
                 break
 
             if line[0] == "B" and len(line) != 7:
+                logging.info(len(line))
                 logging.error(f'action: apuesta_recibida | result: fail | cantidad: ${successfull_bets}')
                 store_bets(bets)
                 return None
