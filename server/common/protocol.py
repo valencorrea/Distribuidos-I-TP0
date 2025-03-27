@@ -27,7 +27,7 @@ class Lottery:
             bet = Bet(fields[1], fields[2], fields[3], fields[4], fields[5], fields[6])
             bets.append(bet)
             successfull_bets += 1
-            client_id = fields[1]
+            client_id = bet.agency
 
         store_bets(bets)
 
