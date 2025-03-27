@@ -58,11 +58,12 @@ class Server:
                 logging.info(f'action: receive_message | result: success | ip: {addr[0]} | msg: {msg}')
 
                 eof = self.lottery.register_bet(msg)
-                if eof:
+                if eof is None:
+                    self.lottery.send_message(client_sock, "E\n")
+                    break
+                elif eof is True:
                     self.lottery.send_message(client_sock, "S\n")
                     break
-                else:
-                    self.lottery.send_message(client_sock, "E\n")
 
 
         except OSError as e:
