@@ -57,11 +57,10 @@ class Server:
                 addr = client_sock.getpeername()
                 logging.info(f'action: receive_message | result: success | ip: {addr[0]} | msg: {msg}')
 
-                response = self.lottery.register_bet(msg)
-                if response:
-                    if response == "F":
-                        self.lottery.send_message(client_sock, "S\n")
-                        break
+                eof = self.lottery.register_bet(msg)
+                if eof:
+                    self.lottery.send_message(client_sock, "S\n")
+                    break
                 else:
                     self.lottery.send_message(client_sock, "E\n")
 
