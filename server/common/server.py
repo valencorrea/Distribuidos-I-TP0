@@ -1,6 +1,7 @@
 import socket
 import logging
 import signal
+import time
 
 from .protocol import Lottery
 from .utils import load_bets, has_won
@@ -16,7 +17,7 @@ class Server:
         self._clients = {}
         signal.signal(signal.SIGTERM, self.exit_gracefully)
         self._continue = True
-        self.clients_amount = clients_amount
+        self.clients_amount = int(clients_amount)
 
         self.lottery = Lottery()
 
@@ -68,6 +69,7 @@ class Server:
             self.lottery.send_message(sock, winner_message)
 
         logging.info(f'action: sorteo | result: success')
+        time.sleep(50)
 
 
     def __handle_client_connection(self, client_sock):
