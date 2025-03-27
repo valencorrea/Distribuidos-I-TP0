@@ -40,7 +40,7 @@ class Lottery:
         logging.info('action: receive_client_bets | result: in_progress')
         message = b""
         while True:
-            chunk = client_sock.recv(80000)
+            chunk = client_sock.recv(1024)
             if not chunk:
                 break
             message += chunk
