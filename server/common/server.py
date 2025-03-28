@@ -1,7 +1,7 @@
 import socket
 import logging
 import signal
-import time
+import threading
 
 from .protocol import Lottery
 from .utils import load_bets, has_won
@@ -18,6 +18,9 @@ class Server:
         signal.signal(signal.SIGTERM, self.exit_gracefully)
         self._continue = True
         self.clients_amount = int(clients_amount)
+
+        self._clients_lock = threading.Lock()
+        self._bets_lock = threading.Lock()
 
         self.lottery = Lottery()
 
@@ -41,13 +44,20 @@ class Server:
         # the server
 
         index = 0
+        threads = []
 
         while self._continue and index < self.clients_amount:
             client_sock = self.__accept_new_connection()
 
             if client_sock:
-                self.__handle_client_connection(client_sock)
+                thread = threading.Thread(target=self.__handle_client_connection, args=(client_sock,))
+                threads.append(thread)
+                thread.start()
                 index += 1
+
+        for thread in threads:
+            thread.join()
+
 
         all_bets = load_bets()
         winners = {
@@ -89,12 +99,13 @@ class Server:
                 addr = client_sock.getpeername()
                 logging.info(f'action: receive_message | result: success | ip: {addr[0]} | msg: {msg}')
 
-                eof, bets, client_id = self.lottery.register_bet(msg)
+                eof, bets, client_id = self.lottery.register_bet(msg, self._bets_lock)
                 if eof is None:
                     self.lottery.send_message(client_sock, "E\n")
                     break
                 if eof is True:
-                    self._clients[client_id] = client_sock # lo hago una vez cuando termine de leer el archivo
+                    with self._clients_lock:
+                        self._clients[client_id] = client_sock # lo hago una vez cuando termine de leer el archivo
                     break
                 elif bets:
                     self.lottery.send_message(client_sock, "S\n")

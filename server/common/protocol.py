@@ -6,7 +6,7 @@ from .utils import Bet, store_bets
 class Lottery:
 
 
-    def register_bet(self, msg):
+    def register_bet(self, msg, bets_lock):
         successfull_bets = 0
         bets = []
         eof = False
@@ -22,7 +22,10 @@ class Lottery:
 
             if len(fields) > 0 and fields[0] == "B" and len(fields) != 7:
                 logging.error(f'action: apuesta_recibida | result: fail | cantidad: {successfull_bets}')
-                store_bets(bets)
+
+                with bets_lock:
+                    store_bets(bets)
+
                 return None, 0, client_id
 
             bet = Bet(fields[1], fields[2], fields[3], fields[4], fields[5], fields[6])

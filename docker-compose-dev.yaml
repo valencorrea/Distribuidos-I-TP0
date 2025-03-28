@@ -6,6 +6,7 @@ services:
     entrypoint: python3 /main.py
     environment:
       - PYTHONUNBUFFERED=1
+      - CLIENTS_AMOUNT=5
     volumes:
       - ./server/config.ini:/config.ini
     networks:
@@ -24,7 +25,7 @@ services:
       - CLI_BET_NUMBER=1111
     volumes:
       - ./client/config.yaml:/config.yaml
-      - ./.data/agency-1.csv:/agency.csv
+      - ./.data/agency-1.csv:/.data/agency.csv
     networks:
       - testing_net
     depends_on:
@@ -43,7 +44,7 @@ services:
       - CLI_BET_NUMBER=1112
     volumes:
       - ./client/config.yaml:/config.yaml
-      - ./.data/agency-2.csv:/agency.csv
+      - ./.data/agency-2.csv:/.data/agency.csv
     networks:
       - testing_net
     depends_on:
@@ -62,7 +63,7 @@ services:
       - CLI_BET_NUMBER=1113
     volumes:
       - ./client/config.yaml:/config.yaml
-      - ./.data/agency-3.csv:/agency.csv
+      - ./.data/agency-3.csv:/.data/agency.csv
     networks:
       - testing_net
     depends_on:
@@ -81,7 +82,7 @@ services:
       - CLI_BET_NUMBER=1114
     volumes:
       - ./client/config.yaml:/config.yaml
-      - ./.data/agency-4.csv:/agency.csv
+      - ./.data/agency-4.csv:/.data/agency.csv
     networks:
       - testing_net
     depends_on:
@@ -100,7 +101,7 @@ services:
       - CLI_BET_NUMBER=1115
     volumes:
       - ./client/config.yaml:/config.yaml
-      - ./.data/agency-5.csv:/agency.csv
+      - ./.data/agency-5.csv:/.data/agency.csv
     networks:
       - testing_net
     depends_on:
