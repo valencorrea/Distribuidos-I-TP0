@@ -27,9 +27,6 @@ Por su parte, el servidor deberá responder con éxito solamente si todas las ap
 
 #### Solucion:
 
+Se agrega a la funcion doBets la idea de que continue incluyendo lineas al batch actual a enviar, siempre y cuando el indice actual de la linea que se este leyendo en ese momento sea menos a c.config.BatchMaxAmount. En el caso de que llegue a este tope, o bien al final del archivo, se envia el mensaje al servidor. Nuevamente aqui se sigue manteniendo el protocolo del ejercicio anterior en donde los mensajes inician con un B (bets). Para indicar que se esta al final del archivo, el cliente enviara a su vez un 'F;n', en donde n representa su numero de agencia. Cuando el servidor recibe este mensaje sabe que no habra mas apuestas de la misma.
 
-el server lo decodifica asi
-["1;Camila Rocio;Varela;37130775;1995-05-09;4179", "2;Diego Agustin;Mamani;33259835;1991-01-08;931"]
-
-
-se loguea la cant fallida
+En caso de que todas las apuestas hayan llegado correctamente, se mantiene el protocolo de que el servidor conteste con el valor 'S'
