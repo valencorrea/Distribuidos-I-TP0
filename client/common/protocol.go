@@ -3,26 +3,43 @@ package common
 import (
 	"bufio"
 	"fmt"
+	"strings"
 )
 
-func formatBetMessage(c *Client) string {
-	message := fmt.Sprintf("B;%s;%s;%s;%s;%s;%s\n", c.config.ID, c.config.Name, c.config.Surname, c.config.IdNumber, c.config.DateOfBirth, c.config.BetNumber)
-	log.Infof("action: sending_message | result: success | message: %v", message)
-	return message
+func formatBetLine(c *Client, line string) ([]byte, error) {
+	fields := strings.Split(strings.TrimSpace(line), ",")
+
+	if len(fields) != 5 {
+		return nil, fmt.Errorf("insuficient fields")
+	}
+	message := fmt.Sprintf("B;%s;%s;%s;%s;%s;%s\n", c.config.ID, fields[0], fields[1], fields[2], fields[3], fields[4])
+	return []byte(message), nil
 }
 
-func writeBetMessage(c *Client, message string) error {
-	bytesWritten := 0
+func writeBetMessage(c *Client, message [][]byte) error {
+	for _, msg := range message {
+		err := _writeBetMessage(c, msg)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
 
-	for bytesWritten < len([]byte(message)) {
-		n, err := c.conn.Write([]byte(message)[bytesWritten:])
+func _writeBetMessage(c *Client, message []byte) error {
+	bytesWritten := 0
+	totalBytes := len(message)
+
+	for bytesWritten < totalBytes {
+		n, err := c.conn.Write(message[bytesWritten:])
 		if err != nil {
 			log.Criticalf(
 				"action: writing_bytes_to_server | result: fail")
+			return err
 		}
 		bytesWritten += n
 	}
-	if bytesWritten < len([]byte(message)) {
+	if bytesWritten < len(message) {
 		log.Criticalf(
 			"action: writing_bet_to_server | result: fail")
 	}
@@ -36,8 +53,21 @@ func decodeBetResponse(c *Client) error {
 	}
 	if len(msg) > 0 && msg[0] == 'E' {
 		log.Criticalf("action: reading_bet_response | result: fail")
+	} else if msg[0] == 'S' {
+		log.Infof("action: reading_bet_response | result: success | msg: %v", msg)
+	} else {
+		c.conn.Close()
 	}
+	return nil
+}
 
-	log.Infof("action: reading_bet_response | result: success | msg: %v", msg)
+func writeNoMoreBetsMessage(c *Client) error {
+	message := []byte("F\n")
+
+	err := _writeBetMessage(c, message)
+	if err != nil {
+		log.Errorf("action: writing_no_more_bets_message | result: fail | client_id: %v | error: %v", c.config.ID, err)
+		return err
+	}
 	return nil
 }

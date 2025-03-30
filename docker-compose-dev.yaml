@@ -24,6 +24,7 @@ services:
       - CLI_BET_NUMBER=1111
     volumes:
       - ./client/config.yaml:/config.yaml
+      - ./.data/agency-1.csv:/agency.csv
     networks:
       - testing_net
     depends_on:
@@ -42,6 +43,7 @@ services:
       - CLI_BET_NUMBER=1112
     volumes:
       - ./client/config.yaml:/config.yaml
+      - ./.data/agency-2.csv:/agency.csv
     networks:
       - testing_net
     depends_on:
@@ -60,6 +62,7 @@ services:
       - CLI_BET_NUMBER=1113
     volumes:
       - ./client/config.yaml:/config.yaml
+      - ./.data/agency-3.csv:/agency.csv
     networks:
       - testing_net
     depends_on:
@@ -78,6 +81,7 @@ services:
       - CLI_BET_NUMBER=1114
     volumes:
       - ./client/config.yaml:/config.yaml
+      - ./.data/agency-4.csv:/agency.csv
     networks:
       - testing_net
     depends_on:
@@ -96,6 +100,7 @@ services:
       - CLI_BET_NUMBER=1115
     volumes:
       - ./client/config.yaml:/config.yaml
+      - ./.data/agency-5.csv:/agency.csv
     networks:
       - testing_net
     depends_on:

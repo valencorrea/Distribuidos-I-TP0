@@ -1,6 +1,8 @@
 package common
 
 import (
+	"bufio"
+	"io"
 	"net"
 	"os"
 	"os/signal"
@@ -14,15 +16,16 @@ var log = logging.MustGetLogger("log")
 
 // ClientConfig Configuration used by the client
 type ClientConfig struct {
-	ID            string
-	Name          string
-	Surname       string
-	IdNumber      string
-	DateOfBirth   string
-	BetNumber     string
-	ServerAddress string
-	LoopAmount    int
-	LoopPeriod    time.Duration
+	ID             string
+	Name           string
+	Surname        string
+	IdNumber       string
+	DateOfBirth    string
+	BetNumber      string
+	ServerAddress  string
+	LoopAmount     int
+	LoopPeriod     time.Duration
+	BatchMaxAmount int
 }
 
 // Client Entity that encapsulates how
@@ -78,10 +81,11 @@ func (c *Client) StartClientLoop() {
 				c.config.ID,
 				err,
 			)
+			c.conn.Close()
 			return
 		}
 
-		err = c.doBet()
+		err = c.doBets()
 		if err != nil {
 			log.Errorf("action: do_bet | result: fail | client_id: %v | error: %v",
 				c.config.ID,
@@ -93,16 +97,6 @@ func (c *Client) StartClientLoop() {
 
 		log.Infof("action: do_bet | result: success | client_id: %v",
 			c.config.ID)
-
-		err = c.receiveBetResponse()
-		if err != nil {
-			log.Errorf("action: receive_message | result: fail | client_id: %v | error: %v",
-				c.config.ID,
-				err,
-			)
-			c.conn.Close()
-			return
-		}
 
 		c.conn.Close()
 
@@ -116,15 +110,79 @@ func (c *Client) StartClientLoop() {
 	log.Infof("action: loop_finished | result: success | client_id: %v", c.config.ID)
 }
 
-func (c *Client) doBet() error {
-	message := formatBetMessage(c)
-
-	err := writeBetMessage(c, message)
+func (c *Client) doBets() error {
+	file, err := os.Open("../../.data/agency.csv")
 	if err != nil {
-		log.Errorf("action: send_bet | result: fail | client_id: %v | error: %v",
+		log.Errorf("action: opening_bet_file | result: fail | client_id: %v | error: %v",
 			c.config.ID,
 			err,
 		)
+		return err
+	}
+	defer file.Close()
+
+	reader := bufio.NewReader(file)
+	var batch [][]byte
+	var line string
+
+	lineIndex := 0
+
+	for {
+		if lineIndex == c.config.BatchMaxAmount {
+			log.Infof("action: send_chunk | result: in_progress | line index: %v", lineIndex)
+			err := writeBetMessage(c, batch)
+			if err != nil {
+				log.Errorf("action: send_batch_to_server | result: fail | client_id: %v | error: %v", c.config.ID, err)
+				return err
+			}
+
+			err = c.receiveBetResponse()
+			if err != nil {
+				log.Errorf("action: receive_message | result: fail | client_id: %v | error: %v",
+					c.config.ID,
+					err,
+				)
+				c.conn.Close()
+			}
+
+			lineIndex = 0
+			batch = nil
+		}
+		line, err = reader.ReadString('\n')
+		if err != nil {
+			if err == io.EOF {
+				err := writeBetMessage(c, batch)
+				if err != nil {
+					log.Errorf("action: send_batch_to_server | result: fail | client_id: %v | error: %v", c.config.ID, err)
+					return err
+				}
+				break
+			}
+			log.Errorf("action: reading_line | result: fail | client_id: %v | error: %v", c.config.ID, err)
+			return err
+		}
+
+		message, err := formatBetLine(c, line)
+		if err != nil {
+			log.Errorf("action: parsing_line | result: fail | client_id: %v | error: %v", c.config.ID, err)
+			break
+		}
+		batch = append(batch, message)
+		lineIndex++
+	}
+
+	err = writeNoMoreBetsMessage(c)
+	if err != nil {
+		log.Errorf("action: send_batch_to_server | result: fail | client_id: %v | error: %v", c.config.ID, err)
+	}
+
+	err = c.receiveBetResponse()
+	if err != nil {
+		log.Errorf("action: receive_message | result: fail | client_id: %v | error: %v",
+			c.config.ID,
+			err,
+		)
+		c.conn.Close()
 	}
 
 	return nil
