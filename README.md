@@ -36,7 +36,14 @@ Podemos notar que el chunk inicia con un ';' lo cual tiene sentido porque es el 
 
 Recibimos nuevos chunks y esta vez alcanza a completar una linea entera. Se registra la linea y el buffer aguarda ahora vacio.
 
-4. 
+4. Se utilizaron threads en este caso de uso para poder manejar multiples conexiones de clientes sin que nos quede bloqueado el servidor. 
+Dada la naturaleza del problema que permite que la cantidad de clientes sea configurable al correr nuestro generar-compose.sh, debemos 
+hacerlo extensible a que a su vez cada uno de ellos pueda manejarse de manera independiente. El usar threads permitio la creacion de un 
+hilo para cada uno de ellos, lo cual nos garantiza que el servidor pueda antender a varios y manejar estas conexiones de manera concurrente. 
+Por el contrario, de otra manera este se bloquearia a la espera de la respuesta del cliente actual.
+En mi codigo se tiene un hilo principal que es el encargado de ir aceptando y handleando nuevas conexiones, y luego los hilos secundarios 
+son los que van a ir resolviendo las tareas asociadas a su respectivo cliente.
+
 
 
 
