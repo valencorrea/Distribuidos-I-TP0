@@ -1,35 +1,20 @@
 # TP0: Docker + Comunicaciones + Concurrencia
 
-## Parte 2: Repaso de Comunicaciones
+## Reentrega
 
-### Ejercicio N°6:
-Las secciones de repaso del trabajo práctico plantean un caso de uso denominado Lotería Nacional. 
-Para la resolución de las mismas deberá utilizarse como base el código fuente provisto en la primera parte, con las modificaciones agregadas en el ejercicio 4.
+#### A corregir
+1. Falta close de client sockets en "happy path" y cuando se ejecuta el SIGTERM
+2. No haces lock para el store_bets en "happy path" AUNQUE lo tenés ahí disponible
+3. No manejas correctamente el corte de paquetes con \n en el server: puede ser que leas un paquete y parte del siguiente que va a quedar corrupto (receive_client_bets)
+4. Usas threads pero no explicas por qué está bien utilizarlos en este caso de uso para python
 
-#### Requerimientos:
-Modificar los clientes para que envíen varias apuestas a la vez (modalidad conocida como procesamiento por chunks o batchs). 
-Los batchs permiten que el cliente registre varias apuestas en una misma consulta, acortando tiempos de transmisión y procesamiento.
-
-La información de cada agencia será simulada por la ingesta de su archivo numerado correspondiente, provisto por la cátedra dentro de .data/datasets.zip. 
-Los archivos deberán ser inyectados en los containers correspondientes y persistido por fuera de la imagen (hint: docker volumes), manteniendo la 
-convencion de que el cliente N utilizara el archivo de apuestas .data/agency-{N}.csv .
-
-En el servidor, si todas las apuestas del batch fueron procesadas correctamente, imprimir por log: 
-`action: apuesta_recibida | result: success | cantidad: ${CANTIDAD_DE_APUESTAS}`. 
-En caso de detectar un error con alguna de las apuestas, debe responder con un código de error a elección e imprimir: 
-`action: apuesta_recibida | result: fail | cantidad: ${CANTIDAD_DE_APUESTAS}`.
-
-La cantidad máxima de apuestas dentro de cada batch debe ser configurable desde config.yaml. 
-Respetar la clave batch: maxAmount, pero modificar el valor por defecto de modo tal que los paquetes no excedan los 8kB.
-
-Por su parte, el servidor deberá responder con éxito solamente si todas las apuestas del batch fueron procesadas correctamente.
+#### Cambios realizados
+1a. Se agrega el cierre del socket con el cual se este comunicando en ese momento el servidor en ese momento, inmediatamente despues de haberle enviado los documentos ganadores del sorteo.
+1b. Se agrega un lockeo para el diccionario de clientes dentro de exit_gracefully para poder cerrar cada socket addres en caso de que se ejecute SIGTERM.
+2. Si bien se habia agregado una variable en servidor self._bets_lock y en register_bet se utilizaba en una de las invocaciones a store_bets, 
+se agrego tambien el lock para cuando se hace la ultima invocacion al final del bucle ya que alli no se estaba realizando.
+3. 
+4. 
 
 
-#### Solucion:
 
-
-el server lo decodifica asi
-["1;Camila Rocio;Varela;37130775;1995-05-09;4179", "2;Diego Agustin;Mamani;33259835;1991-01-08;931"]
-
-
-se loguea la cant fallida

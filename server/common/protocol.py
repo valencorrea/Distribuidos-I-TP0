@@ -4,7 +4,8 @@ from .utils import Bet, store_bets
 
 
 class Lottery:
-
+    def __init__(self):
+        self.msg_buffer = {}
 
     def register_bet(self, msg, bets_lock):
         successfull_bets = 0
@@ -33,7 +34,8 @@ class Lottery:
             successfull_bets += 1
             client_id = bet.agency
 
-        store_bets(bets)
+        with bets_lock:
+            store_bets(bets)
 
         if successfull_bets == len(bets):
             message_client = True
@@ -43,18 +45,21 @@ class Lottery:
 
     def receive_client_bets(self, client_sock):
         logging.info('action: receive_client_bets | result: in_progress')
-        message = b""
-        while True:
+
+        if client_sock not in self.msg_buffer:
+            self.msg_buffer[client_sock] = b""
+
+        while b'\n' not in self.msg_buffer[client_sock]:
             chunk = client_sock.recv(1024)
             if not chunk:
                 break
-            message += chunk
-            if b'\n' in chunk:
-                break
+            self.msg_buffer[client_sock] += chunk
 
-        decoded_message = message.rstrip().decode('utf-8')
-        lines = decoded_message.split("\n")
-        lines = [line for line in lines if line.strip()]
+        data = self.msg_buffer[client_sock]
+        lines = data.split(b'\n')
+
+        self.msg_buffer[client_sock] = lines[-1]
+        lines = [line.decode('utf-8').strip() for line in lines[:-1] if line.strip()]
         return lines
 
     def send_message(self, client_sock, message):

@@ -30,6 +30,13 @@ class Server:
         self._server_socket.close()
         logging.info('action: close_server_socket | result: success')
 
+        try:
+            with self._clients_lock:
+                logging.info('action: close_client_socket | result: in_progress')
+                for client_socket in self._clients.values():
+                    client_socket.close()
+        except OSError as e:
+            logging.error('action: close_client_socket | result: fail')
 
     def run(self):
         """
@@ -79,6 +86,7 @@ class Server:
                 winner_message = f"W\n"
 
             self.lottery.send_message(sock, winner_message)
+            sock.close()
 
         logging.info(f'action: sorteo | result: success')
         self._server_socket.close()
