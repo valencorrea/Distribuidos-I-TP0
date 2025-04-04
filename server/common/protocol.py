@@ -53,12 +53,18 @@ class Lottery:
             chunk = client_sock.recv(1024)
             if not chunk:
                 break
+            print(f"CHUNK RECIBIDO: {chunk}")
             self.msg_buffer[client_sock] += chunk
 
         data = self.msg_buffer[client_sock]
         lines = data.split(b'\n')
+        print("LINEAS COMPLETAS:")
+        for line in lines[:-1]:
+            print(line.decode())
 
         self.msg_buffer[client_sock] = lines[-1]
+        print("ALMACENO EN BUFFER:", lines[-1])
+
         lines = [line.decode('utf-8').strip() for line in lines[:-1] if line.strip()]
         return lines
 
