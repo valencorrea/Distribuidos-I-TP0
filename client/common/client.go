@@ -174,6 +174,7 @@ func (c *Client) doBets() error {
 	}
 
 	line = "F;" + c.config.ID + "\n"
+	batch = [][]byte{}
 	batch = append(batch, []byte(line))
 	err = writeBetMessage(c, batch)
 	time.Sleep(c.config.LoopPeriod)
