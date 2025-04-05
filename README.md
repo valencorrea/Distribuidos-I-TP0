@@ -19,7 +19,7 @@ se agrego tambien el lock para cuando se hace la ultima invocacion al final del 
 Se edita la logica de la funcion receive_client_bets. Se crea el diccionario self.msg_buffer en donde vamos a ir almacenando para cada cliente, los mensajes que no llegamos a recibir en su totalidad.
 Es decir, si leemos 1,2,3\n4 vamos a almacenar unicamente 4 y de esta manera reservarlo para cuando en el futuro llegue el resto de su contenido. Se agregan lineas de log para verificar funcionamiento.
 
-Unicamente para fines de testing se modifica el valor de la cantidad de bytes disponibles para leer del server, y utilizamos unicamente las 3 primeras apuestas del archivo del primer cliente:
+Unicamente para fines de testing se modifica el valor de la cantidad de bytes disponibles para leer del server, y utilizamos el archivo del primer cliente:
 
 _a. 1024 Bytes_
 
