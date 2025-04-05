@@ -25,16 +25,20 @@ class Server:
         self.lottery = Lottery()
 
     def exit_gracefully(self, signum, frame):
+        logging.info('action: exiting_gracefully | result: in_progress')
         self._continue = False
-        logging.info('action: close_server_socket | result: in_progress')
-        self._server_socket.close()
-        logging.info('action: close_server_socket | result: success')
 
         try:
             with self._clients_lock:
                 logging.info('action: close_client_socket | result: in_progress')
                 for client_socket in self._clients.values():
                     client_socket.close()
+                logging.info('action: close_client_socket | result: success')
+
+            logging.info('action: close_server_socket | result: in_progress')
+            self._server_socket.close()
+            logging.info('action: close_server_socket | result: success')
+
         except OSError as e:
             logging.error('action: close_client_socket | result: fail')
 
