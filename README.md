@@ -70,6 +70,4 @@ Por el contrario, de otra manera este se bloquearia a la espera de la respuesta 
 En mi codigo se tiene un hilo principal que es el encargado de ir aceptando y handleando nuevas conexiones, y luego los hilos secundarios 
 son los que van a ir resolviendo las tareas asociadas a su respectivo cliente.
 
-
-
-
+Particularmente en Python, existe algo llamado global interpreter lock (GIL) quien es un mutex que proteje el acceso a objetos, previniendo que varios threads se ejecuten al mismo tiempo. Dado que python no tiene buen manejo de memoria en entornos de estas caracteristicas ya que no es thread safe, se utiliza GIL para evitar condiciones de carrera y garantizar un entorno safety. Este proyecto no se ve directamente afectado por esto dado que no se ejecutan tareas pesadas, sino que por el contrario, cada cliente va enviando sus apuestas en batchs. De esta manera mientras uno esta mandando su batch el server puede estar procesando el batch de otro. Cuando tenemos escenarios de este estilo donde ocurren esperas por ejemplo de lecturas de sockets, Python si permite que otros hilos se ejecuten en el mientras tanto. Es por esto que no es erroneo utilizarlos en el presente contexto. [(Fuente)](https://wiki.python.org/moin/GlobalInterpreterLock)
