@@ -13,6 +13,8 @@ Se agrega a su vez, dentro de exit_gracefully -funcion invocada ante una señal 
 Si bien se habia agregado una variable en servidor self._bets_lock y en register_bet se utilizaba en una de las invocaciones a store_bets, 
 se agrego tambien el lock para cuando se hace la ultima invocacion al final del bucle ya que alli no se estaba realizando.
 
+    with bets_lock:
+        store_bets(bets)
 
 #### 3. No manejas correctamente el corte de paquetes con \n en el server: puede ser que leas un paquete y parte del siguiente que va a quedar corrupto (receive_client_bets)
 
